@@ -3,6 +3,7 @@ package jda.layer.bot.JDA;
 import java.time.Duration;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import jda.layer.bot.JDA.Handlers.HandlerInitializer;
 import jda.layer.bot.JDA.Handlers.buttons.ButtonInteractionHandler;
 import jda.layer.bot.JDA.Handlers.modals.ModalInteractionHandler;
@@ -10,7 +11,9 @@ import jda.layer.bot.JDA.Handlers.slash.SlashCommandInteractionHandler;
 import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -44,6 +47,18 @@ public class Bot extends ListenerAdapter {
     }
     event.deferReply().queue();
     event.reply("Error occurred!").setEphemeral(true).queue();
+  }
+
+  @Override
+  public void onGuildMemberJoin(GuildMemberJoinEvent event) {
+    event
+        .getMember()
+        .getUser()
+        .openPrivateChannel()
+        .flatMap(channel -> channel.sendMessage("content"))
+        .delay(30, TimeUnit.SECONDS)
+        .flatMap(Message::delete)
+        .queue();
   }
 
   @Override

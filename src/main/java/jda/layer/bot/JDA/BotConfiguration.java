@@ -17,7 +17,9 @@ public class BotConfiguration {
   public JDA JDA() {
     try {
       JDA jda =
-          JDABuilder.createDefault(TOKEN).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+          JDABuilder.createDefault(TOKEN)
+              .enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS)
+              .build();
       jda.addEventListener(new Bot(jda));
       return jda;
     } catch (Exception e) {
