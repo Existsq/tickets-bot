@@ -12,6 +12,7 @@ import jda.layer.bot.JDA.Handlers.modals.TicketCreationModalHandler;
 import jda.layer.bot.JDA.Handlers.slash.BanCommandHandler;
 import jda.layer.bot.JDA.Handlers.slash.ClearCommandHandler;
 import jda.layer.bot.JDA.Handlers.slash.SlashCommandInteractionHandler;
+import jda.layer.bot.JDA.Handlers.slash.UnbanCommandHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +34,6 @@ public class HandlerInitializer {
   }
 
   public static Set<SlashCommandInteractionHandler> initSlashCommandHandlers() {
-    return Set.of(new ClearCommandHandler(), new BanCommandHandler());
+    return Set.of(new ClearCommandHandler(), new BanCommandHandler(), new UnbanCommandHandler());
   }
 }

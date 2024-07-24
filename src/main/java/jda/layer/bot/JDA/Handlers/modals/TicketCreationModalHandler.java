@@ -12,11 +12,11 @@ public class TicketCreationModalHandler implements ModalInteractionHandler {
 
   @Override
   public boolean handle(@NotNull ModalInteractionEvent event) {
-    if (event.getInteraction().getModalId().equals("ticket_form")) {
+    if (event.getModalId().equals("ticket_form")) {
       String title = event.getValue("title").getAsString();
       String description = event.getValue("description").getAsString();
 
-      event.reply("New ticket has been successfully created!").setEphemeral(true).queue();
+      event.deferReply().setEphemeral(true).queue();
       ticketCreationService.createUserTicket(title, description, event);
       return true;
     } else {

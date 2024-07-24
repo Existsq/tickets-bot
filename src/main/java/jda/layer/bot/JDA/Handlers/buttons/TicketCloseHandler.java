@@ -1,6 +1,5 @@
 package jda.layer.bot.JDA.Handlers.buttons;
 
-import java.util.Objects;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -10,7 +9,8 @@ public class TicketCloseHandler implements ButtonInteractionHandler {
 
   @Override
   public boolean handle(@NotNull ButtonInteractionEvent event) {
-    if (Objects.equals(event.getInteraction().getButton().getId(), "ticket_close")) {
+    if (event.getButton().getId().equals("ticket_close")) {
+      event.deferEdit().queue();
       processClose(event);
       return true;
     } else {
@@ -19,13 +19,12 @@ public class TicketCloseHandler implements ButtonInteractionHandler {
   }
 
   private void processClose(@NotNull ButtonInteractionEvent event) {
-    Button newButton = Button.danger("close_confirmation", "Sure?");
-
-    event.deferEdit().queue();
     event
         .getHook()
         .editOriginalComponents(
-            ActionRow.of(newButton, Button.primary("cancel_closing", "❌️Go Back")))
+            ActionRow.of(
+                Button.danger("close_confirmation", "Sure?"),
+                Button.primary("cancel_closing", "❌️Go Back")))
         .queue();
   }
 }

@@ -1,6 +1,5 @@
 package jda.layer.bot.JDA.Handlers.buttons;
 
-import java.util.Objects;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -10,7 +9,8 @@ public class TicketBackHandler implements ButtonInteractionHandler {
 
   @Override
   public boolean handle(@NotNull ButtonInteractionEvent event) {
-    if (Objects.equals(event.getButton().getId(), "cancel_closing")) {
+    if (event.getButton().getId().equals("cancel_closing")) {
+      event.deferEdit().queue();
       processBack(event);
       return true;
     } else {
@@ -19,8 +19,6 @@ public class TicketBackHandler implements ButtonInteractionHandler {
   }
 
   private void processBack(@NotNull ButtonInteractionEvent event) {
-
-    event.deferEdit().queue();
 
     event
         .getHook()

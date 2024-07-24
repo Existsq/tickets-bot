@@ -15,17 +15,17 @@ public class TicketCreationService {
       String title, String description, @NotNull ModalInteractionEvent event) {
 
     event
-        .getHook()
-        .getJDA()
-        .getGuildById(1264239150358335643L)
+        .getGuild()
         .createTextChannel(title)
         .setTopic(description)
         .queue(
-            textChannel ->
-                textChannel
-                    .sendMessage("Title: " + title + '\n' + "Description: " + description)
-                    .addComponents(
-                        ActionRow.of(Button.danger("ticket_close", "\uD83D\uDD10 Close Ticket")))
-                    .queue());
+            textChannel -> {
+              textChannel
+                  .sendMessage("Title: " + title + '\n' + "Description: " + description)
+                  .addComponents(
+                      ActionRow.of(Button.danger("ticket_close", "\uD83D\uDD10 Close Ticket")))
+                  .queue();
+              event.getHook().sendMessage("New ticket has been successfully created!").queue();
+            });
   }
 }

@@ -1,6 +1,5 @@
 package jda.layer.bot.JDA;
 
-import java.time.Duration;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -45,8 +44,7 @@ public class Bot extends ListenerAdapter {
         return;
       }
     }
-    event.deferReply().queue();
-    event.reply("Error occurred!").setEphemeral(true).queue();
+    event.getHook().sendMessage("Error occurred!").setEphemeral(true).queue();
   }
 
   @Override
@@ -71,7 +69,9 @@ public class Bot extends ListenerAdapter {
             Commands.slash("ban", "Ban a user")
                 .addOption(OptionType.USER, "user", "User to ban. Just mention")
                 .addOption(OptionType.STRING, "reason", "Reason baning the user")
-                .addOption(OptionType.INTEGER, "days", "Amount of days to delete user`s messages"))
+                .addOption(OptionType.INTEGER, "days", "Amount of days to delete user`s messages"),
+            Commands.slash("unban", "Unbans the user who has been banned!")
+                .addOption(OptionType.USER, "user", "User who needs to be unbanned"))
         .queue();
 
     Guild guild = event.getJDA().getGuildById(1264239150358335643L);
@@ -122,11 +122,9 @@ public class Bot extends ListenerAdapter {
   public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
     for (SlashCommandInteractionHandler handler : SLASH_HANDLERS) {
       if (handler.handle(event)) {
-        return;
-      } else {
-        event.deferReply().queue();
-        event.reply("Error occurred!").setEphemeral(true).delay(Duration.ofSeconds(5)).queue();
+        break;
       }
+//      event.getHook().sendMessage("Error occurred!").setEphemeral(true).queue();
     }
   }
 
@@ -137,7 +135,5 @@ public class Bot extends ListenerAdapter {
         return;
       }
     }
-    event.deferReply().queue();
-    event.reply("Error occurred!").setEphemeral(true).delay(Duration.ofSeconds(5)).queue();
   }
 }
