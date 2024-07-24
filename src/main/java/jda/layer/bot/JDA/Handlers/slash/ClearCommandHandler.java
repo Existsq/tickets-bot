@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 public class ClearCommandHandler implements SlashCommandInteractionHandler {
 
-  private final ClearMessageService clearMessageService = new ClearMessageService();
+  private static final ClearMessageService clearMessageService = new ClearMessageService();
 
   @Override
   public boolean handle(SlashCommandInteractionEvent event) {

@@ -15,15 +15,14 @@ public class TicketOpenHandler implements ButtonInteractionHandler {
   @Override
   public boolean handle(@NotNull ButtonInteractionEvent event) {
     if (event.getButton().getId().equals("open_ticket")) {
-      processOpen(event);
+      showModal(event);
       return true;
     } else {
       return false;
     }
   }
 
-  private void processOpen(@NotNull ButtonInteractionEvent event) {
-
+  private void showModal(@NotNull ButtonInteractionEvent event) {
     if (counter < USER_LIMIT) {
       TextInput subject =
           TextInput.create("title", "Title", TextInputStyle.SHORT)

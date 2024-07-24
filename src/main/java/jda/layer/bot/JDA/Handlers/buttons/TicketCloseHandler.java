@@ -27,10 +27,5 @@ public class TicketCloseHandler implements ButtonInteractionHandler {
         .editOriginalComponents(
             ActionRow.of(newButton, Button.primary("cancel_closing", "❌️Go Back")))
         .queue();
-
-    //    event.getHook().sendMessage(user.getName() + ", are you sure you want to close the
-    // ticket?")
-    //        .setEphemeral(true)
-    //        .queue();
   }
 }

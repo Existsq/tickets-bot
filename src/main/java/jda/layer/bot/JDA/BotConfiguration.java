@@ -26,4 +26,5 @@ public class BotConfiguration {
       throw new IllegalArgumentException("Provide a bot token!");
     }
   }
+
 }

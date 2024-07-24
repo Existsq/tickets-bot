@@ -14,7 +14,7 @@ public class ClearMessageService {
 
     assert author != null;
     if (author.hasPermission(Permission.ADMINISTRATOR)) {
-      if (amount > 0 && amount < 25) {
+      if (amount > 0 && amount < 26) {
         List<Message> messages =
             event.getInteraction().getMessageChannel().getHistory().retrievePast(amount).complete();
 

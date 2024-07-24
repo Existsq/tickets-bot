@@ -67,7 +67,11 @@ public class Bot extends ListenerAdapter {
         .updateCommands()
         .addCommands(
             Commands.slash("clear", "Clears messages in channel. Possible amount is below 25")
-                .addOption(OptionType.INTEGER, "amount", "The number of messages to delete."))
+                .addOption(OptionType.INTEGER, "amount", "The number of messages to delete."),
+            Commands.slash("ban", "Ban a user")
+                .addOption(OptionType.USER, "user", "User to ban. Just mention")
+                .addOption(OptionType.STRING, "reason", "Reason baning the user")
+                .addOption(OptionType.INTEGER, "days", "Amount of days to delete user`s messages"))
         .queue();
 
     Guild guild = event.getJDA().getGuildById(1264239150358335643L);

@@ -9,9 +9,14 @@ import jda.layer.bot.JDA.Handlers.buttons.TicketConfirmCloseHandler;
 import jda.layer.bot.JDA.Handlers.buttons.TicketOpenHandler;
 import jda.layer.bot.JDA.Handlers.modals.ModalInteractionHandler;
 import jda.layer.bot.JDA.Handlers.modals.TicketCreationModalHandler;
+import jda.layer.bot.JDA.Handlers.slash.BanCommandHandler;
 import jda.layer.bot.JDA.Handlers.slash.ClearCommandHandler;
 import jda.layer.bot.JDA.Handlers.slash.SlashCommandInteractionHandler;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
+@AllArgsConstructor
 public class HandlerInitializer {
 
   public static Set<ButtonInteractionHandler> initButtonHandlers() {
@@ -28,6 +33,6 @@ public class HandlerInitializer {
   }
 
   public static Set<SlashCommandInteractionHandler> initSlashCommandHandlers() {
-    return Set.of(new ClearCommandHandler());
+    return Set.of(new ClearCommandHandler(), new BanCommandHandler());
   }
 }
