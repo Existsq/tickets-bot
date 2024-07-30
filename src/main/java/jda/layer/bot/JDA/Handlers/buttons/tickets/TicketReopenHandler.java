@@ -50,7 +50,9 @@ public class TicketReopenHandler implements ButtonInteractionHandler {
 
       event
           .getMessage()
-          .editMessageEmbeds(getEmbedForActive(event.getMessage().getEmbeds().getFirst()))
+          .editMessageEmbeds(
+              getEmbedForActive(
+                  event.getMessage().getEmbeds().getFirst(), event.getMember().getId()))
           .queue();
 
       event
@@ -86,7 +88,7 @@ public class TicketReopenHandler implements ButtonInteractionHandler {
     return builder.build();
   }
 
-  private MessageEmbed getEmbedForActive(MessageEmbed messageToEdit) {
+  private MessageEmbed getEmbedForActive(MessageEmbed messageToEdit, String reopenerId) {
     EmbedBuilder builder = new EmbedBuilder();
     List<Field> embedFields = messageToEdit.getFields();
     String title = messageToEdit.getTitle();
@@ -99,10 +101,7 @@ public class TicketReopenHandler implements ButtonInteractionHandler {
     builder.setTitle(title);
     builder.setDescription(description);
     builder.addField("**Status**", "Processing \uD83D\uDFE2", true);
-    builder.addField(
-        "**Is being considered by**",
-        messageToEdit.getFields().get(messageToEdit.getFields().size() - 3).getValue(),
-        true);
+    builder.addField("**Is being considered by**", "<@" + reopenerId + ">", true);
     builder.addField(embedFields.getLast());
     builder.setTimestamp(Instant.now());
     builder.setFooter("Reopened to consider");

@@ -46,7 +46,7 @@ public class TicketCreationService {
         .addField("**Status**", "Awaiting \uD83D\uDD35", true)
         .addField("**Is being considered by**", "-", true)
         .addField(EmbedBuilder.ZERO_WIDTH_SPACE, EmbedBuilder.ZERO_WIDTH_SPACE, false)
-        .setFooter("Opened")
+        .setFooter("Created")
         .setTimestamp(java.time.Instant.now())
         .build();
   }

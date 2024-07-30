@@ -37,7 +37,7 @@ public class BanCommandHandler implements SlashCommandInteractionHandler {
     }
 
     if (event.getMember().getId().equals(userToBan.getId())) {
-      event.getHook().sendMessage("You cant ban yourself!").queue();
+      event.getHook().sendMessage("You can not ban yourself!").queue();
       return;
     }
 

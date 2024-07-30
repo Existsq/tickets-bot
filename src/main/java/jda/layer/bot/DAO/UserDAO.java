@@ -1,6 +1,5 @@
 package jda.layer.bot.DAO;
 
-import lombok.Builder;
 import lombok.Setter;
 import net.dv8tion.jda.api.entities.User;
 

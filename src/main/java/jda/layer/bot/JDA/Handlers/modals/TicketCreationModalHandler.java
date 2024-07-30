@@ -3,7 +3,6 @@ package jda.layer.bot.JDA.Handlers.modals;
 import jda.layer.bot.JDA.Service.TicketCreationService;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
