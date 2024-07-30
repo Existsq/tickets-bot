@@ -3,6 +3,7 @@ package jda.layer.bot.JDA.Service;
 import java.awt.Color;
 import java.util.EnumSet;
 import jda.layer.bot.JDA.Config.Settings;
+import jda.layer.bot.JDA.Config.TicketsPermissions;
 import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -23,71 +24,43 @@ public class TicketCreationService {
 
   private MessageEmbed createSuccessEmbed(String channelId, String channelName) {
     return new EmbedBuilder()
-        .setTitle("🎟️ Новый тикет создан!")
+        .setTitle("🎟️ New ticket has been created!")
         .setColor(Color.GREEN)
         .setDescription(
-            "Ваш тикет был успешно создан. Вы можете перейти к обсуждению в новом канале.")
-        .addField("Канал тикета", String.format("<#%s> (%s)", channelId, channelName), false)
+            "Your ticket has been successfully created. You can move on to the discussion in a new channel.")
+        .addField("Ticket channel", String.format("<#%s>", channelId), false)
         .setTimestamp(java.time.Instant.now())
+        .setFooter("Opened")
         .build();
   }
 
   private MessageEmbed createTicketChannelEmbed(String issueTitle, String issueReason) {
     return new EmbedBuilder()
-        .setTitle("📂 Подробности обращения")
+        .setTitle("📂 Ticket details")
         .setColor(new Color(84, 172, 238))
         .setDescription(
-            "Ваш тикет был создан. Пожалуйста, предоставьте дополнительную информацию или ожидайте ответа от команды поддержки.")
-        .addField("**Название обращения**", String.format("%s", issueTitle), false)
-        .addField("**Причина обращения**", String.format("%s", issueReason), false)
+            "Your ticket has been created. Please provide additional information or wait for a response from the support team.")
+        .addField("**Title**", String.format("%s", issueTitle), true)
+        .addField("**Description**", String.format("%s", issueReason), true)
+        .addField(EmbedBuilder.ZERO_WIDTH_SPACE, EmbedBuilder.ZERO_WIDTH_SPACE, false)
+        .addField("**Status**", "Awaiting \uD83D\uDD35", true)
+        .addField("**Is being considered by**", "-", true)
+        .addField(EmbedBuilder.ZERO_WIDTH_SPACE, EmbedBuilder.ZERO_WIDTH_SPACE, false)
+        .setFooter("Opened")
         .setTimestamp(java.time.Instant.now())
         .build();
   }
 
   public void createUserTicket(@NotNull ModalInteractionEvent event) {
-
     Guild guild = event.getGuild();
     String issueTitle = event.getValue("title").getAsString();
     String issueReason = event.getValue("description").getAsString();
     long userId = Long.parseLong(event.getMember().getId());
 
-    EnumSet<Permission> allowCreator =
-        EnumSet.of(
-            Permission.MESSAGE_SEND,
-            Permission.MESSAGE_HISTORY,
-            Permission.MESSAGE_EMBED_LINKS,
-            Permission.MESSAGE_ATTACH_FILES,
-            Permission.MESSAGE_ADD_REACTION,
-            Permission.MESSAGE_EXT_EMOJI,
-            Permission.MESSAGE_EXT_STICKER,
-            Permission.MESSAGE_ATTACH_VOICE_MESSAGE,
-            Permission.VIEW_CHANNEL);
-
-    EnumSet<Permission> denyCreator =
-        EnumSet.of(
-            Permission.MANAGE_PERMISSIONS,
-            Permission.MANAGE_CHANNEL,
-            Permission.MESSAGE_MANAGE,
-            Permission.CREATE_INSTANT_INVITE,
-            Permission.MANAGE_WEBHOOKS,
-            Permission.MESSAGE_SEND_IN_THREADS,
-            Permission.CREATE_PUBLIC_THREADS,
-            Permission.CREATE_PRIVATE_THREADS,
-            Permission.MESSAGE_MENTION_EVERYONE,
-            Permission.MANAGE_THREADS,
-            Permission.MESSAGE_TTS,
-            Permission.MESSAGE_SEND_POLLS,
-            Permission.USE_APPLICATION_COMMANDS,
-            Permission.USE_EMBEDDED_ACTIVITIES,
-            Permission.USE_EXTERNAL_APPLICATIONS);
-
-    EnumSet<Permission> denyEveryone = EnumSet.of(Permission.VIEW_CHANNEL);
-
     assert guild != null;
     Category openTicketsCategory = Settings.getTicketsCategory(guild, "OPENED TICKETS");
 
     Role helperRole = event.getGuild().getRolesByName("Ticket Support", true).getFirst();
-
 
     // Creating new TextChannel in Category
     event
@@ -105,10 +78,13 @@ public class TicketCreationService {
                   .setSlowmode(10)
                   .setPosition(0)
                   .setNSFW(false)
-                  .putPermissionOverride(event.getGuild().getPublicRole(), null, denyEveryone)
-                  .putMemberPermissionOverride(userId, allowCreator, denyCreator)
+                  .putPermissionOverride(
+                      event.getGuild().getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL))
+                  .putMemberPermissionOverride(
+                      userId,
+                      TicketsPermissions.allowCreatorPerms,
+                      TicketsPermissions.denyCreatorPerms)
                   .queue();
-
 
               // Sending a welcome message to textChannel with buttons
               textChannel

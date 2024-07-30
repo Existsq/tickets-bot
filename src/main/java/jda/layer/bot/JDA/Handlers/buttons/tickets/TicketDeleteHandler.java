@@ -19,7 +19,6 @@ public class TicketDeleteHandler implements ButtonInteractionHandler {
   private void deleteTicket(ButtonInteractionEvent event) {
     // Checking permissions
 
-
     // Deleting the channel with ticket
     event
         .getChannel()

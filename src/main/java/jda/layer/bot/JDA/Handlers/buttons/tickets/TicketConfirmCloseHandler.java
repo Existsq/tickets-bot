@@ -1,10 +1,15 @@
 package jda.layer.bot.JDA.Handlers.buttons.tickets;
 
+import java.awt.Color;
+import java.time.Instant;
 import java.util.EnumSet;
+import java.util.List;
 import jda.layer.bot.JDA.Config.Settings;
 import jda.layer.bot.JDA.Handlers.buttons.ButtonInteractionHandler;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.MessageEmbed.Field;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -34,10 +39,6 @@ public class TicketConfirmCloseHandler implements ButtonInteractionHandler {
             Long.parseLong(event.getMember().getId()), null, EnumSet.of(Permission.VIEW_CHANNEL))
         .queue();
 
-//    long categoryChannelsAmount =
-//        event.getChannel().asTextChannel().getParentCategory().getTextChannels().stream().count();
-//    Category categoryToDelete = event.getChannel().asTextChannel().getParentCategory();
-
     // Moving to "Closed Tickets" category
     event
         .getChannel()
@@ -46,16 +47,8 @@ public class TicketConfirmCloseHandler implements ButtonInteractionHandler {
         .setParent(Settings.getTicketsCategory(event.getGuild(), "CLOSED TICKETS"))
         .queue();
 
-    // Checking amount of channels in parent category and deleting if it will be zero
-//    if (categoryChannelsAmount - 1 == 0
-//        && !(categoryToDelete.getName().equals("OPENED TICKETS")
-//            || categoryToDelete.getName().equals("CLOSED TICKETS"))) {
-//      event.getGuild().getCategoryById(categoryToDelete.getId()).delete().queue();
-//    }
-
     // Adding to "Panel Message" new buttons
     event
-        .getInteraction()
         .getMessage()
         .editMessageComponents(
             ActionRow.of(
@@ -64,7 +57,38 @@ public class TicketConfirmCloseHandler implements ButtonInteractionHandler {
                 Button.secondary("archive_ticket", "Archive Ticket")))
         .queue();
 
+    event
+        .getMessage()
+        .editMessageEmbeds(
+            getEditedEmbed(
+                event.getMessage().getEmbeds().getFirst(),
+                Long.parseLong(event.getInteraction().getMember().getId())))
+        .queue();
+
     // Answering to user about success
     event.getHook().sendMessage("You have closed the ticket").queue();
+  }
+
+  private MessageEmbed getEditedEmbed(MessageEmbed messageToEdit, long closedById) {
+    EmbedBuilder builder = new EmbedBuilder();
+    List<Field> embedFields = messageToEdit.getFields();
+    String title = messageToEdit.getTitle();
+    String description = messageToEdit.getDescription();
+
+    for (int i = 0; i < 3; ++i) {
+      builder.addField(embedFields.get(i));
+    }
+
+    builder.setTitle(title);
+    builder.setDescription(description);
+    builder.addField("**Status**", "Closed \uD83D\uDD34", true);
+    builder.addField("**Considered by**", embedFields.get(embedFields.size() - 2).getValue(), true);
+    builder.addField("**Closed by**", "<@" + closedById + ">", true);
+    builder.addField(embedFields.getLast());
+    builder.setTimestamp(Instant.now());
+    builder.setFooter("Closed");
+    builder.setColor(new Color(245, 37, 101));
+
+    return builder.build();
   }
 }

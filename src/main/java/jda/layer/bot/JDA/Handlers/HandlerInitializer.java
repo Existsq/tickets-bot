@@ -9,6 +9,8 @@ import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketCloseHandler;
 import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketConfirmCloseHandler;
 import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketDeleteHandler;
 import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketOpenHandler;
+import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketReopenHandler;
+import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketUnclaimHandler;
 import jda.layer.bot.JDA.Handlers.modals.ModalInteractionHandler;
 import jda.layer.bot.JDA.Handlers.modals.TicketCreationModalHandler;
 import jda.layer.bot.JDA.Handlers.slash.BanCommandHandler;
@@ -31,7 +33,9 @@ public class HandlerInitializer {
         new TicketBackHandler(),
         new TicketOpenHandler(),
         new TicketClaimHandler(),
-        new TicketDeleteHandler());
+        new TicketDeleteHandler(),
+        new TicketUnclaimHandler(),
+        new TicketReopenHandler());
   }
 
   public static Set<ModalInteractionHandler> initModalHandlers() {

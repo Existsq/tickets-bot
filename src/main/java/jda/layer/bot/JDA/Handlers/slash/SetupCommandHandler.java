@@ -2,6 +2,7 @@ package jda.layer.bot.JDA.Handlers.slash;
 
 import java.awt.Color;
 import java.util.EnumSet;
+import jda.layer.bot.JDA.Config.TicketsPermissions;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -30,57 +31,36 @@ public class SetupCommandHandler implements SlashCommandInteractionHandler {
   }
 
   private void setupGuild(SlashCommandInteractionEvent event) {
+    Guild guild = event.getGuild();
+    int topPosition = guild.getCategories().getFirst().getPosition();
+
     // Creating helper roles
     event
         .getGuild()
         .createRole()
         .setColor(new Color(65, 240, 151))
         .setName("Ticket Support")
-        .setPermissions(EnumSet.of(Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL))
+        .setPermissions(TicketsPermissions.supportRolePerms)
         .complete();
 
-    Role helperRole = event.getGuild().getRolesByName("Ticket Support", true).getFirst();
+    Role helperRole = guild.getRolesByName("Ticket Support", true).getFirst();
 
-    Guild guild = event.getGuild();
+    // Creating Panel Channel + Audit
+    guild
+        .createTextChannel("ticket-audit")
+        .queue(
+            textChannel ->
+                textChannel
+                    .getManager()
+                    .putRolePermissionOverride(
+                        helperRole.getIdLong(),
+                        EnumSet.of(Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL),
+                        EnumSet.of(Permission.MANAGE_PERMISSIONS))
+                    .putPermissionOverride(
+                        event.getGuild().getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL))
+                    .queue());
 
-    // Creating all categories
-    event
-        .getGuild()
-        .createCategory("OPENED TICKETS")
-        .addRolePermissionOverride(
-            helperRole.getIdLong(),
-            EnumSet.of(Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL),
-            EnumSet.of(Permission.MANAGE_PERMISSIONS))
-        .queue();
-    event
-        .getGuild()
-        .createCategory("CLOSED TICKETS")
-        .addRolePermissionOverride(
-            helperRole.getIdLong(),
-            EnumSet.of(Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL),
-            EnumSet.of(Permission.MANAGE_PERMISSIONS))
-        .queue();
-    event
-        .getGuild()
-        .createCategory("ACTIVE TICKETS")
-        .addRolePermissionOverride(
-            helperRole.getIdLong(),
-            EnumSet.of(Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL),
-            EnumSet.of(Permission.MANAGE_PERMISSIONS))
-        .queue();
-    event
-        .getGuild()
-        .createTextChannel("TICKETS AUDIT")
-        .addRolePermissionOverride(
-            helperRole.getIdLong(),
-            EnumSet.of(Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL),
-            EnumSet.of(Permission.MANAGE_PERMISSIONS))
-        .addPermissionOverride(
-            event.getGuild().getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL))
-        .queue();
-
-    event
-        .getGuild()
+    guild
         .createTextChannel("open-ticket")
         .queue(
             textChannel ->
@@ -90,41 +70,35 @@ public class SetupCommandHandler implements SlashCommandInteractionHandler {
                         ActionRow.of(Button.success("open_ticket", "\uD83D\uDD13 Open Ticket")))
                     .queue());
 
+    // Creating all categories
+    guild
+        .createCategory("ACTIVE TICKETS")
+        .addRolePermissionOverride(
+            helperRole.getIdLong(),
+            EnumSet.of(Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL),
+            EnumSet.of(Permission.MANAGE_PERMISSIONS))
+        .setPosition(topPosition)
+        .queue();
+
+    guild
+        .createCategory("OPENED TICKETS")
+        .addRolePermissionOverride(
+            helperRole.getIdLong(),
+            EnumSet.of(Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL),
+            EnumSet.of(Permission.MANAGE_PERMISSIONS))
+        .setPosition(topPosition + 1)
+        .queue();
+
+    guild
+        .createCategory("CLOSED TICKETS")
+        .addRolePermissionOverride(
+            helperRole.getIdLong(),
+            EnumSet.of(Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL),
+            EnumSet.of(Permission.MANAGE_PERMISSIONS))
+        .setPosition(topPosition + 2)
+        .queue();
+
     event.getHook().sendMessage("All done! Enjoy!").queue();
-
-    //    assert guild != null;
-    //    boolean isChannelExist =
-    //        guild.getTextChannels().stream()
-    //            .anyMatch(channel -> channel.getName().equals("open-ticket"));
-    //
-    //    boolean isMessageExist =
-    //        guild.getTextChannels().parallelStream()
-    //            .anyMatch(
-    //                textChannel ->
-    //                    textChannel.getHistory().retrievePast(1).complete().stream()
-    //                        .anyMatch(
-    //                            message ->
-    //                                message.getAuthor().isBot()
-    //                                    && message.getChannel().getName().equals("open-ticket")));
-
-    //    if (isChannelExist && !isMessageExist) {
-    //      TextChannel textChannel =
-    //          guild.getTextChannels().stream()
-    //              .filter(channel -> channel.getName().equals("open-ticket"))
-    //              .findFirst()
-    //              .get();
-    //      initMessage(textChannel);
-    //    } else if (isChannelExist) {
-    //      log.info("Bot started!");
-    //    } else {
-    //      guild
-    //          .createTextChannel("open-ticket")
-    //          .queue(
-    //              createdChannel -> {
-    //                System.out.println("Channel created: " + createdChannel.getName());
-    //                initMessage(createdChannel);
-    //              });
-    //    }
   }
 
   private MessageEmbed getInitEmbed() {
