@@ -1,16 +1,13 @@
-package jda.layer.bot.JDA.Handlers.buttons;
+package jda.layer.bot.JDA.Handlers.buttons.tickets;
 
-import java.util.Optional;
-import jda.layer.bot.Entity.UserEntity;
 import jda.layer.bot.JDA.Config.Settings;
-import jda.layer.bot.Repository.UserRepository;
+import jda.layer.bot.JDA.Handlers.buttons.ButtonInteractionHandler;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component

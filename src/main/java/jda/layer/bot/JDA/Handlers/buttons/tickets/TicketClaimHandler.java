@@ -1,7 +1,8 @@
-package jda.layer.bot.JDA.Handlers.buttons;
+package jda.layer.bot.JDA.Handlers.buttons.tickets;
 
 import java.util.EnumSet;
 import jda.layer.bot.JDA.Config.TicketsPermissions;
+import jda.layer.bot.JDA.Handlers.buttons.ButtonInteractionHandler;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;

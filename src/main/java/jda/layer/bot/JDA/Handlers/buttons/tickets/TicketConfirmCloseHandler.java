@@ -1,6 +1,7 @@
-package jda.layer.bot.JDA.Handlers.buttons;
+package jda.layer.bot.JDA.Handlers.buttons.tickets;
 
 import jda.layer.bot.JDA.Config.Settings;
+import jda.layer.bot.JDA.Handlers.buttons.ButtonInteractionHandler;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
