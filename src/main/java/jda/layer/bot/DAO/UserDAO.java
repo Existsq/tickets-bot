@@ -18,5 +18,4 @@ public class UserDAO {
   public UserDAO(User discordUser) {
     this.user_id = Integer.parseInt(discordUser.getId());
   }
-
 }

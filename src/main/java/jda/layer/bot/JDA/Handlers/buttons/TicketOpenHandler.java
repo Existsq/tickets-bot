@@ -1,16 +1,22 @@
 package jda.layer.bot.JDA.Handlers.buttons;
 
+import java.util.Optional;
+import jda.layer.bot.Entity.UserEntity;
+import jda.layer.bot.JDA.Config.Settings;
+import jda.layer.bot.Repository.UserRepository;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TicketOpenHandler implements ButtonInteractionHandler {
 
-  private static final int USER_LIMIT = 3;
-  private static int counter;
+  private final int USER_LIMIT = Settings.getTicketsPerUserLimit();
 
   @Override
   public boolean handle(@NotNull ButtonInteractionEvent event) {
@@ -23,30 +29,35 @@ public class TicketOpenHandler implements ButtonInteractionHandler {
   }
 
   private void showModal(@NotNull ButtonInteractionEvent event) {
-    if (counter < USER_LIMIT) {
+    int userTicketsAmount = 0;
+
+    if (userTicketsAmount < USER_LIMIT) {
       TextInput subject =
           TextInput.create("title", "Title", TextInputStyle.SHORT)
               .setPlaceholder("What happened?")
-              .setMinLength(5)
+              .setRequired(true)
               .setMaxLength(100)
               .build();
 
       TextInput body =
           TextInput.create("description", "Description", TextInputStyle.PARAGRAPH)
               .setPlaceholder("Describe your problem moderators may help you with")
-              .setMinLength(5)
-              .setMaxLength(1000)
+              .setRequired(true)
+              .setMaxLength(350)
               .build();
 
       Modal modal =
-          Modal.create("ticket_form", "Creating Ticket")
+          Modal.create("ticket_form", "Creating Ticket...")
               .addComponents(ActionRow.of(subject), ActionRow.of(body))
               .build();
 
       event.replyModal(modal).queue();
-      counter++;
     } else {
-      event.reply("Sorry, but your limit of tickets is exceeded").setEphemeral(true).queue();
+      event
+          .getHook()
+          .sendMessage("Sorry, but your limit of tickets is exceeded")
+          .setEphemeral(true)
+          .queue();
     }
   }
 }

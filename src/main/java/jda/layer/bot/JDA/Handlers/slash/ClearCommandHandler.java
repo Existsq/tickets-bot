@@ -12,18 +12,14 @@ public class ClearCommandHandler implements SlashCommandInteractionHandler {
   public boolean handle(SlashCommandInteractionEvent event) {
     if (event.getName().equals("clear")) {
       event.deferReply().setEphemeral(true).queue();
-      try {
-        clearMessages(event);
-      } catch (Exception e) {
-        event.getHook().sendMessage(e.getMessage()).setEphemeral(true).queue();
-      }
+      clearMessages(event);
       return true;
     } else {
       return false;
     }
   }
 
-  public void clearMessages(SlashCommandInteractionEvent event) throws IllegalAccessException {
+  public void clearMessages(SlashCommandInteractionEvent event) {
     Member author = event.getMember();
     int amount = event.getOption("amount").getAsInt();
 
@@ -32,15 +28,16 @@ public class ClearCommandHandler implements SlashCommandInteractionHandler {
       if (amount > 0 && amount < 26) {
         List<Message> messages =
             event.getMessageChannel().getHistory().retrievePast(amount).complete();
-
         event.getMessageChannel().purgeMessages(messages);
-
         event.getHook().sendMessage("Clearing all out!").queue();
       } else {
-        throw new IllegalArgumentException("Amount above the limit! Enter number below 25");
+        event.getHook().sendMessage("Amount above the limit! Enter number below 25").queue();
       }
     } else {
-      throw new IllegalAccessException("Sorry, but you don`t have permission to use this command!");
+      event
+          .getHook()
+          .sendMessage("Sorry, but you don`t have permission to use this command!")
+          .queue();
     }
   }
 }

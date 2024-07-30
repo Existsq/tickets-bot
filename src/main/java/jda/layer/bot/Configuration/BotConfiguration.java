@@ -1,5 +1,6 @@
-package jda.layer.bot.JDA;
+package jda.layer.bot.Configuration;
 
+import jda.layer.bot.JDA.Bot;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -30,4 +31,6 @@ public class BotConfiguration {
       throw new IllegalArgumentException("Provide a bot token!");
     }
   }
+
+
 }

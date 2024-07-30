@@ -23,12 +23,15 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
 public class Bot extends ListenerAdapter {
 
+  private static final Logger log = LoggerFactory.getLogger(Bot.class);
   private final JDA jda;
   private final Set<ButtonInteractionHandler> BUTTON_HANDLERS =
       HandlerInitializer.initButtonHandlers();
@@ -74,11 +77,28 @@ public class Bot extends ListenerAdapter {
                 .addOption(OptionType.USER, "user", "User who needs to be unbanned"))
         .queue();
 
+//    int topPosition;
     Guild guild = event.getJDA().getGuildById(1264239150358335643L);
     assert guild != null;
+
+//    if (!guild.getCategories().isEmpty()) {
+//      topPosition = guild.getCategories().getFirst().getPosition();
+//    } else {
+//      topPosition = 0;
+//    }
+//
+//    if (guild.getCategoriesByName("OPENED TICKETS", false).isEmpty()) {
+//      guild.createCategory("OPENED TICKETS").setPosition(topPosition).queue();
+//    }
+//
+//    if (guild.getCategoriesByName("CLOSED TICKETS", false).isEmpty()) {
+//      guild.createCategory("CLOSED TICKETS").setPosition(topPosition).queue();
+//    }
+
     boolean isChannelExist =
         guild.getTextChannels().stream()
             .anyMatch(channel -> channel.getName().equals("ticket-system"));
+
     boolean isMessageExist =
         guild.getTextChannels().parallelStream()
             .anyMatch(
@@ -88,6 +108,7 @@ public class Bot extends ListenerAdapter {
                             message ->
                                 message.getAuthor().isBot()
                                     && message.getChannel().getName().equals("ticket-system")));
+
     if (isChannelExist && !isMessageExist) {
       TextChannel textChannel =
           guild.getTextChannels().stream()
@@ -124,7 +145,7 @@ public class Bot extends ListenerAdapter {
       if (handler.handle(event)) {
         break;
       }
-//      event.getHook().sendMessage("Error occurred!").setEphemeral(true).queue();
+      //      event.getHook().sendMessage("Error occurred!").setEphemeral(true).queue();
     }
   }
 

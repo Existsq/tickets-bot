@@ -2,10 +2,12 @@ package jda.layer.bot.JDA.Handlers;
 
 import java.util.Set;
 import jda.layer.bot.JDA.Handlers.buttons.ButtonInteractionHandler;
+import jda.layer.bot.JDA.Handlers.buttons.TicketClaimHandler;
 import jda.layer.bot.JDA.Handlers.buttons.SettingsChangeHandler;
 import jda.layer.bot.JDA.Handlers.buttons.TicketBackHandler;
 import jda.layer.bot.JDA.Handlers.buttons.TicketCloseHandler;
 import jda.layer.bot.JDA.Handlers.buttons.TicketConfirmCloseHandler;
+import jda.layer.bot.JDA.Handlers.buttons.TicketDeleteHandler;
 import jda.layer.bot.JDA.Handlers.buttons.TicketOpenHandler;
 import jda.layer.bot.JDA.Handlers.modals.ModalInteractionHandler;
 import jda.layer.bot.JDA.Handlers.modals.TicketCreationModalHandler;
@@ -26,7 +28,9 @@ public class HandlerInitializer {
         new TicketConfirmCloseHandler(),
         new TicketBackHandler(),
         new TicketOpenHandler(),
-        new SettingsChangeHandler());
+        new SettingsChangeHandler(),
+        new TicketClaimHandler(),
+        new TicketDeleteHandler());
   }
 
   public static Set<ModalInteractionHandler> initModalHandlers() {

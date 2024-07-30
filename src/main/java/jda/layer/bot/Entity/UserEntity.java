@@ -26,4 +26,7 @@ public class UserEntity {
 
   @Column(name = "warns")
   int warns;
+
+  @Column(name = "ticket_count")
+  int ticketCount;
 }

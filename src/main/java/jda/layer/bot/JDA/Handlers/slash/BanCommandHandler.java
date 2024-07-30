@@ -2,7 +2,8 @@ package jda.layer.bot.JDA.Handlers.slash;
 
 import java.util.concurrent.TimeUnit;
 import jda.layer.bot.Repository.UserRepository;
-import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +18,7 @@ public class BanCommandHandler implements SlashCommandInteractionHandler {
   public boolean handle(@NotNull SlashCommandInteractionEvent event) {
     if (event.getName().equals("ban")) {
       event.deferReply().setEphemeral(true).queue();
-      try {
-        banUser(event);
-        event
-            .getHook()
-            .sendMessage(
-                "Successfully banned the user: "
-                    + event.getOption("user").getAsUser().getName())
-            .queue();
-      } catch (IllegalArgumentException e) {
-        event.getHook().sendMessage(e.getMessage()).queue();
-      }
+      banUser(event);
       return true;
     } else {
       return false;
@@ -35,17 +26,46 @@ public class BanCommandHandler implements SlashCommandInteractionHandler {
   }
 
   private void banUser(SlashCommandInteractionEvent event) {
-    Member memberToBan = event.getOption("user").getAsMember();
+    User userToBan = event.getOption("user").getAsUser();
     String reason = event.getOption("reason").getAsString();
     int delDaysMessages = event.getOption("days").getAsInt();
 
-    if (memberToBan == null) {
-      throw new IllegalArgumentException("This user is not a member of this guild!");
-    }
-    if (delDaysMessages < 0 || delDaysMessages > 7) {
-      throw new IllegalArgumentException("Value \"days\" can only be from 0 to 7");
+    if (event.getMember().getPermissions().stream()
+        .noneMatch(permission -> permission.equals(Permission.BAN_MEMBERS))) {
+      event.getHook().sendMessage("You dont have a permission to do that!").queue();
+      return;
     }
 
-    memberToBan.ban(delDaysMessages, TimeUnit.DAYS).reason(reason).queue();
+    if (event.getMember().getId().equals(userToBan.getId())) {
+      event.getHook().sendMessage("You cant ban yourself!").queue();
+      return;
+    }
+
+    if (event.getGuild().getOwner().getId().equals(userToBan.getId())) {
+      event.getHook().sendMessage("Bruh... who you trying to ban?").queue();
+      return;
+    }
+
+    if (delDaysMessages < 0 || delDaysMessages > 7) {
+      event.getHook().sendMessage("Value \"days\" can only be from 0 to 7").queue();
+    }
+
+    event
+        .getGuild()
+        .ban(userToBan, delDaysMessages, TimeUnit.DAYS)
+        .reason(reason)
+        .queue(
+            (success) ->
+                event
+                    .getHook()
+                    .sendMessage(
+                        "Successfully banned the user: "
+                            + "<@"
+                            + userToBan.getId()
+                            + "> ("
+                            + userToBan.getName()
+                            + ")")
+                    .queue(),
+            (failure) -> event.getHook().sendMessage("Error occurred :(").queue());
   }
 }
