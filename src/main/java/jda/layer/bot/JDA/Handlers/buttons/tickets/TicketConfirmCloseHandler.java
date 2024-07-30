@@ -1,7 +1,9 @@
 package jda.layer.bot.JDA.Handlers.buttons.tickets;
 
+import java.util.EnumSet;
 import jda.layer.bot.JDA.Config.Settings;
 import jda.layer.bot.JDA.Handlers.buttons.ButtonInteractionHandler;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
@@ -24,6 +26,14 @@ public class TicketConfirmCloseHandler implements ButtonInteractionHandler {
   private void processCloseConfirmation(@NotNull ButtonInteractionEvent event) {
     // Changing permissions for Helper Role + User Creator
 
+    event
+        .getChannel()
+        .asTextChannel()
+        .getManager()
+        .putMemberPermissionOverride(
+            Long.parseLong(event.getMember().getId()), null, EnumSet.of(Permission.VIEW_CHANNEL))
+        .queue();
+
     long categoryChannelsAmount =
         event.getChannel().asTextChannel().getParentCategory().getTextChannels().stream().count();
     Category categoryToDelete = event.getChannel().asTextChannel().getParentCategory();
@@ -38,7 +48,7 @@ public class TicketConfirmCloseHandler implements ButtonInteractionHandler {
 
     // Checking amount of channels in parent category and deleting if it will be zero
     if (categoryChannelsAmount - 1 == 0
-        && (!categoryToDelete.getName().equals("OPENED TICKETS")
+        && !(categoryToDelete.getName().equals("OPENED TICKETS")
             || categoryToDelete.getName().equals("CLOSED TICKETS"))) {
       event.getGuild().getCategoryById(categoryToDelete.getId()).delete().queue();
     }

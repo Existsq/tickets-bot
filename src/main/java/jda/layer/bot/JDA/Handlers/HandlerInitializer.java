@@ -2,9 +2,9 @@ package jda.layer.bot.JDA.Handlers;
 
 import java.util.Set;
 import jda.layer.bot.JDA.Handlers.buttons.ButtonInteractionHandler;
-import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketClaimHandler;
 import jda.layer.bot.JDA.Handlers.buttons.SettingsChangeHandler;
 import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketBackHandler;
+import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketClaimHandler;
 import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketCloseHandler;
 import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketConfirmCloseHandler;
 import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketDeleteHandler;
@@ -24,11 +24,11 @@ public class HandlerInitializer {
 
   public static Set<ButtonInteractionHandler> initButtonHandlers() {
     return Set.of(
+        new SettingsChangeHandler(),
         new TicketCloseHandler(),
         new TicketConfirmCloseHandler(),
         new TicketBackHandler(),
         new TicketOpenHandler(),
-        new SettingsChangeHandler(),
         new TicketClaimHandler(),
         new TicketDeleteHandler());
   }

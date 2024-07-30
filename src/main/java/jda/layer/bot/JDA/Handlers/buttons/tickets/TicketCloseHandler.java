@@ -24,8 +24,8 @@ public class TicketCloseHandler implements ButtonInteractionHandler {
         .getHook()
         .editOriginalComponents(
             ActionRow.of(
-                Button.danger("close_confirmation", "Sure?"),
-                Button.primary("cancel_closing", "❌️Go Back")))
+                Button.danger("close_confirmation", "✅ Confirm?"),
+                Button.primary("cancel_closing", "\uD83D\uDD19 No")))
         .queue();
   }
 }

@@ -48,7 +48,7 @@ public class TicketCreationService {
     Guild guild = event.getGuild();
     String issueTitle = event.getValue("title").getAsString();
     String issueReason = event.getValue("description").getAsString();
-    long userId = Long.parseLong(event.getUser().getId());
+    long userId = Long.parseLong(event.getMember().getId());
 
     EnumSet<Permission> allowCreator =
         EnumSet.of(
@@ -85,16 +85,15 @@ public class TicketCreationService {
     assert guild != null;
     Category openTicketsCategory = Settings.getTicketsCategory(guild, "OPENED TICKETS");
 
+
+    // Creating new TextChannel
     event
         .getGuild()
         .createTextChannel(issueTitle, openTicketsCategory)
         .queue(
             (textChannel) -> {
-              openTicketsCategory
-                  .getManager()
-                  .putMemberPermissionOverride(userId, allowCreator, denyCreator)
-                  .queue();
 
+              // Updating ticketTextChannel Permissions
               textChannel
                   .getManager()
                   .setType(ChannelType.TEXT)
@@ -106,14 +105,17 @@ public class TicketCreationService {
                   .putPermissionOverride(event.getGuild().getPublicRole(), null, denyEveryone)
                   .putMemberPermissionOverride(userId, allowCreator, denyCreator)
                   .queue();
+
+              // Sending a welcome message to textChannel with buttons
               textChannel
                   .sendMessageEmbeds(createTicketChannelEmbed(issueTitle, issueReason))
                   .addComponents(
                       ActionRow.of(
                           Button.danger("ticket_close", "\uD83D\uDD10 Close Ticket"),
-                          Button.success("claim_ticket", "\uD83C\uDF9F\uFE0F Claim")))
+                          Button.success("claim_ticket", "\uD83C\uDF9F\uFE0F Claim Ticket")))
                   .queue();
 
+              // Sending response message to user with info
               event
                   .getHook()
                   .sendMessageEmbeds(createSuccessEmbed(textChannel.getId(), textChannel.getName()))

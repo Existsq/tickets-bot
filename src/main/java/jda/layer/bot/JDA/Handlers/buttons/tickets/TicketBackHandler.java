@@ -24,7 +24,9 @@ public class TicketBackHandler implements ButtonInteractionHandler {
     event
         .getHook()
         .editOriginalComponents(
-            ActionRow.of(Button.danger("ticket_close", "\uD83D\uDD10 Close ticket")))
+            ActionRow.of(
+                Button.danger("ticket_close", "\uD83D\uDD10 Close ticket"),
+                Button.success("claim_ticket", "\uD83C\uDF9F\uFE0F Claim Ticket")))
         .queue();
   }
 }

@@ -19,7 +19,7 @@ public class ClearCommandHandler implements SlashCommandInteractionHandler {
     }
   }
 
-  public void clearMessages(SlashCommandInteractionEvent event) {
+  private void clearMessages(SlashCommandInteractionEvent event) {
     Member author = event.getMember();
     int amount = event.getOption("amount").getAsInt();
 
