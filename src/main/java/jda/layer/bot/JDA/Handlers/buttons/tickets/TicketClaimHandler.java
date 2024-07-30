@@ -24,7 +24,7 @@ public class TicketClaimHandler implements ButtonInteractionHandler {
   }
 
   private void claimTicket(@NotNull ButtonInteractionEvent event) {
-    String helperCategoryName = event.getMember().getEffectiveName() + "`s TICKETS";
+//    String helperCategoryName = event.getMember().getEffectiveName() + "`s TICKETS";
     int topPosition = event.getGuild().getCategories().getFirst().getPosition();
     EnumSet<Permission> denyEveryone = EnumSet.of(Permission.VIEW_CHANNEL);
 
@@ -32,30 +32,30 @@ public class TicketClaimHandler implements ButtonInteractionHandler {
         event.getMember().getPermissions().stream()
             .anyMatch(permission -> permission.equals(Permission.MESSAGE_MANAGE));
 
-    boolean isHelperCategoryExist =
-        event.getGuild().getCategories().stream()
-            .anyMatch(category -> category.getName().equals(helperCategoryName));
+//    boolean isHelperCategoryExist =
+//        event.getGuild().getCategories().stream()
+//            .anyMatch(category -> category.getName().equals(helperCategoryName));
 
     if (hasPermission) {
-      if (!isHelperCategoryExist) {
-        event
-            .getGuild()
-            .createCategory(helperCategoryName)
-            .setPosition(topPosition)
-            .addPermissionOverride(event.getGuild().getPublicRole(), null, denyEveryone)
-            .addMemberPermissionOverride(
-                Long.parseLong(event.getMember().getId()),
-                TicketsPermissions.allowHelper,
-                TicketsPermissions.denyHelper)
-            .complete();
-      }
+//      if (!isHelperCategoryExist) {
+//        event
+//            .getGuild()
+//            .createCategory(helperCategoryName)
+//            .setPosition(topPosition)
+//            .addPermissionOverride(event.getGuild().getPublicRole(), null, denyEveryone)
+//            .addMemberPermissionOverride(
+//                Long.parseLong(event.getMember().getId()),
+//                TicketsPermissions.allowHelper,
+//                TicketsPermissions.denyHelper)
+//            .complete();
+//      }
       event
           .getChannel()
           .asTextChannel()
           .getManager()
           .setParent(
               event.getGuild().getCategories().stream()
-                  .filter(category -> category.getName().equals(helperCategoryName))
+                  .filter(category -> category.getName().equals("ACTIVE TICKETS"))
                   .findFirst()
                   .get())
           .putPermissionOverride(event.getGuild().getPublicRole(), null, denyEveryone)

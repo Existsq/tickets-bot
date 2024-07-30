@@ -34,9 +34,9 @@ public class TicketConfirmCloseHandler implements ButtonInteractionHandler {
             Long.parseLong(event.getMember().getId()), null, EnumSet.of(Permission.VIEW_CHANNEL))
         .queue();
 
-    long categoryChannelsAmount =
-        event.getChannel().asTextChannel().getParentCategory().getTextChannels().stream().count();
-    Category categoryToDelete = event.getChannel().asTextChannel().getParentCategory();
+//    long categoryChannelsAmount =
+//        event.getChannel().asTextChannel().getParentCategory().getTextChannels().stream().count();
+//    Category categoryToDelete = event.getChannel().asTextChannel().getParentCategory();
 
     // Moving to "Closed Tickets" category
     event
@@ -47,11 +47,11 @@ public class TicketConfirmCloseHandler implements ButtonInteractionHandler {
         .queue();
 
     // Checking amount of channels in parent category and deleting if it will be zero
-    if (categoryChannelsAmount - 1 == 0
-        && !(categoryToDelete.getName().equals("OPENED TICKETS")
-            || categoryToDelete.getName().equals("CLOSED TICKETS"))) {
-      event.getGuild().getCategoryById(categoryToDelete.getId()).delete().queue();
-    }
+//    if (categoryChannelsAmount - 1 == 0
+//        && !(categoryToDelete.getName().equals("OPENED TICKETS")
+//            || categoryToDelete.getName().equals("CLOSED TICKETS"))) {
+//      event.getGuild().getCategoryById(categoryToDelete.getId()).delete().queue();
+//    }
 
     // Adding to "Panel Message" new buttons
     event

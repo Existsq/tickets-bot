@@ -86,8 +86,10 @@ public class Bot extends ListenerAdapter {
                                 "days",
                                 "Amount of days to delete user`s messages"),
                         Commands.slash("unban", "Unbans the user who has been banned!")
-                            .addOption(OptionType.USER, "user", "User who needs to be unbanned"))
+                            .addOption(OptionType.USER, "user", "User who needs to be unbanned"),
+                        Commands.slash("setup-auto", "Auto setup creating all from scratch"))
                     .queue());
+    log.info("Bot is running!");
   }
 
   @Override

@@ -25,12 +25,10 @@ public class BotConfiguration {
               .setStatus(OnlineStatus.DO_NOT_DISTURB)
               .enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS)
               .build();
-      jda.addEventListener(new Bot(jda));
+      jda.addEventListener(new Bot());
       return jda;
     } catch (Exception e) {
       throw new IllegalArgumentException("Provide a bot token!");
     }
   }
-
-
 }
