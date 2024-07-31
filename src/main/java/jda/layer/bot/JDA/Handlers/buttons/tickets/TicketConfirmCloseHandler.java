@@ -20,7 +20,7 @@ public class TicketConfirmCloseHandler implements ButtonInteractionHandler {
   @Override
   public boolean handle(@NotNull ButtonInteractionEvent event) {
     if (event.getButton().getId().equals("close_confirmation")) {
-      event.deferReply().setEphemeral(true).queue();
+      event.deferReply().queue();
       processCloseConfirmation(event);
       return true;
     } else {
@@ -66,7 +66,17 @@ public class TicketConfirmCloseHandler implements ButtonInteractionHandler {
         .queue();
 
     // Answering to user about success
-    event.getHook().sendMessage("You have closed the ticket").queue();
+    event
+        .getHook()
+        .sendMessageEmbeds(
+            new EmbedBuilder()
+                .setTitle("Closed Ticket")
+                .setDescription("The ticket was closed")
+                .setTimestamp(Instant.now())
+                .setFooter("Closed")
+                .setColor(new Color(245, 37, 101))
+                .build())
+        .queue();
   }
 
   private MessageEmbed getEditedEmbed(MessageEmbed messageToEdit, long closedById) {
@@ -82,7 +92,7 @@ public class TicketConfirmCloseHandler implements ButtonInteractionHandler {
     builder.setTitle(title);
     builder.setDescription(description);
     builder.addField("**Status**", "Closed \uD83D\uDD34", true);
-    builder.addField("**Considered by**", embedFields.get(embedFields.size() - 2).getValue(), true);
+    builder.addField("**Claimed by**", embedFields.get(embedFields.size() - 2).getValue(), true);
     builder.addField("**Closed by**", "<@" + closedById + ">", true);
     builder.addField(embedFields.getLast());
     builder.setTimestamp(Instant.now());

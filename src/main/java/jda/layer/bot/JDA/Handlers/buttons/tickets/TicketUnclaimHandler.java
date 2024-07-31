@@ -18,7 +18,7 @@ public class TicketUnclaimHandler implements ButtonInteractionHandler {
   @Override
   public boolean handle(ButtonInteractionEvent event) {
     if (event.getButton().getId().equals("unclaim_ticket")) {
-      event.deferReply().setEphemeral(true).queue();
+      event.deferReply().queue();
       unclaimTicket(event);
       return true;
     } else {
@@ -44,7 +44,17 @@ public class TicketUnclaimHandler implements ButtonInteractionHandler {
                 Button.danger("ticket_close", "\uD83D\uDD10 Close Ticket"),
                 Button.success("claim_ticket", "\uD83C\uDF9F\uFE0F Claim Ticket")))
         .queue();
-    event.getHook().sendMessage("You unclaimed this ticket").queue();
+    event
+        .getHook()
+        .sendMessageEmbeds(
+            new EmbedBuilder()
+                .setTitle("Unclaimed Ticket")
+                .setDescription("Your ticket was unclaimed. Wait for another helper")
+                .setTimestamp(Instant.now())
+                .setFooter("Unclaimed")
+                .setColor(new Color(84, 172, 238))
+                .build())
+        .queue();
   }
 
   private MessageEmbed getEditedEmbed(MessageEmbed messageToEdit) {
@@ -60,7 +70,7 @@ public class TicketUnclaimHandler implements ButtonInteractionHandler {
     builder.setTitle(title);
     builder.setDescription(description);
     builder.addField("**Status**", "Awaiting \uD83D\uDD35", true);
-    builder.addField("**Is being considered by**", "-", true);
+    builder.addField("**Claimed by**", "-", true);
     builder.addField(embedFields.getLast());
     builder.setTimestamp(Instant.now());
     builder.setFooter("Unclaimed");

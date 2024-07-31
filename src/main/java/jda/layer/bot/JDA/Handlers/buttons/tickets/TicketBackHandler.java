@@ -22,7 +22,7 @@ public class TicketBackHandler implements ButtonInteractionHandler {
 
   private void processBack(@NotNull ButtonInteractionEvent event) {
     Field statusCode =
-        event.getInteraction().getMessage().getEmbeds().getFirst().getFields().stream()
+        event.getMessage().getEmbeds().getFirst().getFields().stream()
             .filter(field -> field.getName().contains("Status"))
             .findFirst()
             .orElse(null);

@@ -44,7 +44,7 @@ public class TicketCreationService {
         .addField("**Description**", String.format("%s", issueReason), true)
         .addField(EmbedBuilder.ZERO_WIDTH_SPACE, EmbedBuilder.ZERO_WIDTH_SPACE, false)
         .addField("**Status**", "Awaiting \uD83D\uDD35", true)
-        .addField("**Is being considered by**", "-", true)
+        .addField("**Claimed by**", "-", true)
         .addField(EmbedBuilder.ZERO_WIDTH_SPACE, EmbedBuilder.ZERO_WIDTH_SPACE, false)
         .setFooter("Created")
         .setTimestamp(java.time.Instant.now())
@@ -97,11 +97,16 @@ public class TicketCreationService {
 
               // Sending response message to user with info
               event
-                  .getHook()
+                  .getChannel()
+                  .asTextChannel()
                   .sendMessageEmbeds(createSuccessEmbed(textChannel.getId(), textChannel.getName()))
                   .queue();
             },
             (failure) ->
-                event.getHook().sendMessage("Sorry, but I can not open new ticket now :(").queue());
+                event
+                    .getChannel()
+                    .asTextChannel()
+                    .sendMessage("Sorry, but I can not open new ticket now :(")
+                    .queue());
   }
 }

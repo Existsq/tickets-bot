@@ -18,7 +18,7 @@ public class TicketReopenHandler implements ButtonInteractionHandler {
   @Override
   public boolean handle(ButtonInteractionEvent event) {
     if (event.getButton().getId().equals("reopen_ticket")) {
-      event.deferReply().setEphemeral(true).queue();
+      event.deferReply().queue();
       reopenTicket(event);
       return true;
     }
@@ -44,7 +44,6 @@ public class TicketReopenHandler implements ButtonInteractionHandler {
                   Button.danger("ticket_close", "\uD83D\uDD10 Close Ticket"),
                   Button.success("claim_ticket", "\uD83C\uDF9F\uFE0F Claim Ticket")))
           .queue();
-      event.getHook().sendMessage("Successfully reopened the ticket").queue();
     } else {
       event.getChannel().asTextChannel().getManager().setParent(activeCategory).queue();
 
@@ -62,8 +61,18 @@ public class TicketReopenHandler implements ButtonInteractionHandler {
                   Button.danger("ticket_close", "\uD83D\uDD10 Close Ticket"),
                   Button.secondary("unclaim_ticket", "Unclaim Ticket")))
           .queue();
-      event.getHook().sendMessage("Successfully reopened the ticket").queue();
     }
+    event
+        .getHook()
+        .sendMessageEmbeds(
+            new EmbedBuilder()
+                .setTitle("Reopened Ticket")
+                .setDescription("The ticket was reopened")
+                .setTimestamp(Instant.now())
+                .setFooter("Closed")
+                .setColor(new Color(84, 172, 238))
+                .build())
+        .queue();
   }
 
   private MessageEmbed getEmbedForOpened(MessageEmbed messageToEdit) {

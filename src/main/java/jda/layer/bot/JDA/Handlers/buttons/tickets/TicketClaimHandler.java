@@ -20,7 +20,7 @@ public class TicketClaimHandler implements ButtonInteractionHandler {
   @Override
   public boolean handle(ButtonInteractionEvent event) {
     if (event.getButton().getId().equals("claim_ticket")) {
-      event.deferReply().setEphemeral(true).queue();
+      event.deferReply().queue();
       claimTicket(event);
       return true;
     } else {
@@ -53,7 +53,6 @@ public class TicketClaimHandler implements ButtonInteractionHandler {
           .queue();
 
       event
-          .getInteraction()
           .getMessage()
           .editMessageComponents(
               ActionRow.of(
@@ -62,13 +61,23 @@ public class TicketClaimHandler implements ButtonInteractionHandler {
           .queue();
 
       event
-          .getInteraction()
           .getMessage()
           .editMessageEmbeds(
               getEditedEmbed(event.getMessage().getEmbeds().get(0), event.getMember().getId()))
           .queue();
 
-      event.getHook().sendMessage("Now you are considering this ticket!").queue();
+      event
+          .getHook()
+          .sendMessageEmbeds(
+              new EmbedBuilder()
+                  .setTitle("Claimed Ticket")
+                  .setDescription(
+                      "Your ticket will be handled by <@" + event.getMember().getId() + ">")
+                  .setTimestamp(Instant.now())
+                  .setFooter("Claimed")
+                  .setColor(new Color(4, 203, 116))
+                  .build())
+          .queue();
     } else {
       event
           .getHook()
@@ -90,7 +99,7 @@ public class TicketClaimHandler implements ButtonInteractionHandler {
     builder.setTitle(title);
     builder.setDescription(description);
     builder.addField("**Status**", "Processing \uD83D\uDFE2", true);
-    builder.addField("**Is being considered by**", "<@" + helperId + ">", true);
+    builder.addField("**Claimed by**", "<@" + helperId + ">", true);
     builder.addField(embedFields.getLast());
     builder.setTimestamp(Instant.now());
     builder.setFooter("Started to consider");

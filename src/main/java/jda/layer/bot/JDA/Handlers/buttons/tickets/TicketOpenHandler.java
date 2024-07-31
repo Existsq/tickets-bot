@@ -51,9 +51,9 @@ public class TicketOpenHandler implements ButtonInteractionHandler {
       event.replyModal(modal).queue();
     } else {
       event
-          .getHook()
+          .getChannel()
+          .asTextChannel()
           .sendMessage("Sorry, but your limit of tickets is exceeded")
-          .setEphemeral(true)
           .queue();
     }
   }

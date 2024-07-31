@@ -24,10 +24,15 @@ public class UnbanCommandHandler implements SlashCommandInteractionHandler {
         .unban(userToUnban)
         .queue(
             (success) ->
-                event.getHook().sendMessage("You unbanned " + userToUnban.getName() + "!").queue(),
+                event
+                    .getChannel()
+                    .asTextChannel()
+                    .sendMessage("You unbanned " + userToUnban.getName() + "!")
+                    .queue(),
             (failure) ->
                 event
-                    .getHook()
+                    .getChannel()
+                    .asTextChannel()
                     .sendMessage(userToUnban.getName() + " is not in ban list!")
                     .queue());
   }
