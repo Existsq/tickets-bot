@@ -32,7 +32,7 @@ public class BanCommandHandler implements SlashCommandInteractionHandler {
       return;
     }
 
-    if (event.getGuild().getOwner().getId().equals(userToBan.getId())) {
+    if (event.getGuild().retrieveOwner().complete().getId().equals(userToBan.getId())) {
       event.getHook().sendMessage("Bruh... who you trying to ban?").queue();
       return;
     }

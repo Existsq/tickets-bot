@@ -20,7 +20,7 @@ public class ClearCommandHandler implements SlashCommandInteractionHandler {
         List<Message> messages =
             event.getMessageChannel().getHistory().retrievePast(amount).complete();
         event.getMessageChannel().purgeMessages(messages);
-        event.getHook().sendMessage("Clearing " + amount + " messages!").queue();
+        event.getHook().sendMessage("Clearing `" + amount + "` messages!").queue();
       } else {
         event.getHook().sendMessage("Amount above the limit! Enter number below 25").queue();
       }
