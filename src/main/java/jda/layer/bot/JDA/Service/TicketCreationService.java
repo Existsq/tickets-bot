@@ -103,8 +103,7 @@ public class TicketCreationService {
             },
             (failure) ->
                 event
-                    .getChannel()
-                    .asTextChannel()
+                    .getHook()
                     .sendMessage("Sorry, but I can not open new ticket now :(")
                     .queue());
   }
