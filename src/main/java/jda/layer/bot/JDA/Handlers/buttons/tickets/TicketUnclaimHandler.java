@@ -16,19 +16,15 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 public class TicketUnclaimHandler implements ButtonInteractionHandler {
 
   @Override
-  public boolean handle(ButtonInteractionEvent event) {
-    if (event.getButton().getId().equals("unclaim_ticket")) {
-      event.deferReply().queue();
-      unclaimTicket(event);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  private void unclaimTicket(ButtonInteractionEvent event) {
+  public void handle(ButtonInteractionEvent event) {
     MessageEmbed messageToEdit = event.getMessage().getEmbeds().getFirst();
     Guild guild = event.getGuild();
+
+    ActionRow afterUnclaimButtons =
+        ActionRow.of(
+            Button.danger("close_ticket", "\uD83D\uDD10 Close Ticket"),
+            Button.success("claim_ticket", "\uD83C\uDF9F\uFE0F Claim Ticket"));
+
     Category openedCategory =
         guild.getCategories().stream()
             .filter(category -> category.getName().equals("OPENED TICKETS"))
@@ -37,24 +33,15 @@ public class TicketUnclaimHandler implements ButtonInteractionHandler {
 
     event.getMessage().getChannel().asTextChannel().getManager().setParent(openedCategory).queue();
     event.getMessage().editMessageEmbeds(getEditedEmbed(messageToEdit)).queue();
-    event
-        .getMessage()
-        .editMessageComponents(
-            ActionRow.of(
-                Button.danger("ticket_close", "\uD83D\uDD10 Close Ticket"),
-                Button.success("claim_ticket", "\uD83C\uDF9F\uFE0F Claim Ticket")))
-        .queue();
-    event
-        .getHook()
-        .sendMessageEmbeds(
-            new EmbedBuilder()
-                .setTitle("Unclaimed Ticket")
-                .setDescription("Your ticket was unclaimed. Wait for another helper")
-                .setTimestamp(Instant.now())
-                .setFooter("Unclaimed")
-                .setColor(new Color(84, 172, 238))
-                .build())
-        .queue();
+    event.getMessage().editMessageComponents(afterUnclaimButtons).queue();
+    event.replyEmbeds(getUnclaimEmbed()).queue();
+  }
+
+  private MessageEmbed getUnclaimEmbed() {
+    return new EmbedBuilder()
+        .setDescription("Your ticket was unclaimed. Wait for another helper")
+        .setColor(new Color(84, 172, 238))
+        .build();
   }
 
   private MessageEmbed getEditedEmbed(MessageEmbed messageToEdit) {

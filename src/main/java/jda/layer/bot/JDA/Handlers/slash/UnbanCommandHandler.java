@@ -6,17 +6,8 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 public class UnbanCommandHandler implements SlashCommandInteractionHandler {
 
   @Override
-  public boolean handle(SlashCommandInteractionEvent event) {
-    if (event.getName().equals("unban")) {
-      event.deferReply().setEphemeral(true).queue();
-      unbanUser(event);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  private void unbanUser(SlashCommandInteractionEvent event) {
+  public void handle(SlashCommandInteractionEvent event) {
+    event.deferReply().setEphemeral(true).queue();
     User userToUnban = event.getOption("user").getAsUser();
 
     event

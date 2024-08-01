@@ -10,41 +10,39 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageEmbed.Field;
+import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import org.jetbrains.annotations.NotNull;
 
 public class TicketClaimHandler implements ButtonInteractionHandler {
 
   @Override
-  public boolean handle(ButtonInteractionEvent event) {
-    if (event.getButton().getId().equals("claim_ticket")) {
-      event.deferReply().queue();
-      claimTicket(event);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  private void claimTicket(@NotNull ButtonInteractionEvent event) {
+  public void handle(ButtonInteractionEvent event) {
     EnumSet<Permission> denyEveryone = EnumSet.of(Permission.VIEW_CHANNEL);
+
+    ActionRow afterClaimButtons =
+        ActionRow.of(
+            Button.danger("close_ticket", "\uD83D\uDD10 Close Ticket"),
+            Button.secondary("unclaim_ticket", "Unclaim Ticket"));
 
     boolean hasRole =
         event.getMember().getRoles().stream()
             .anyMatch(role -> role.getName().equals("Ticket Support"));
 
+    Category activeTicketCategory =
+        event.getGuild().getCategories().stream()
+            .filter(category -> category.getName().equals("ACTIVE TICKETS"))
+            .findFirst()
+            .get();
+
     if (hasRole) {
+      // Setting up TextChannel Category and Permissions
       event
           .getChannel()
           .asTextChannel()
           .getManager()
-          .setParent(
-              event.getGuild().getCategories().stream()
-                  .filter(category -> category.getName().equals("ACTIVE TICKETS"))
-                  .findFirst()
-                  .get())
+          .setParent(activeTicketCategory)
           .putPermissionOverride(event.getGuild().getPublicRole(), null, denyEveryone)
           .putMemberPermissionOverride(
               Long.parseLong(event.getMember().getId()),
@@ -52,36 +50,23 @@ public class TicketClaimHandler implements ButtonInteractionHandler {
               TicketsPermissions.denyHelperPerms)
           .queue();
 
-      event
-          .getMessage()
-          .editMessageComponents(
-              ActionRow.of(
-                  Button.danger("ticket_close", "\uD83D\uDD10 Close Ticket"),
-                  Button.secondary("unclaim_ticket", "Unclaim Ticket")))
-          .queue();
+      // Editing buttons for panel
+      event.getMessage().editMessageComponents(afterClaimButtons).queue();
 
+      // Editing embed for panel
       event
           .getMessage()
           .editMessageEmbeds(
               getEditedEmbed(event.getMessage().getEmbeds().get(0), event.getMember().getId()))
           .queue();
 
-      event
-          .getHook()
-          .sendMessageEmbeds(
-              new EmbedBuilder()
-                  .setTitle("Claimed Ticket")
-                  .setDescription(
-                      "Your ticket will be handled by <@" + event.getMember().getId() + ">")
-                  .setTimestamp(Instant.now())
-                  .setFooter("Claimed")
-                  .setColor(new Color(4, 203, 116))
-                  .build())
-          .queue();
+      // Sending Claim Embed message
+      event.replyEmbeds(getClaimEmbed(event.getMember().getId())).setEphemeral(false).queue();
     } else {
+      // Sending message if member does not have helper role
       event
-          .getHook()
-          .sendMessage("Sorry, but this option is only for helpers (Support Ticket Role)")
+          .reply("Sorry, but this option is only for helpers (Support Ticket Role)")
+          .setEphemeral(true)
           .queue();
     }
   }
@@ -106,5 +91,12 @@ public class TicketClaimHandler implements ButtonInteractionHandler {
     builder.setColor(new Color(4, 203, 116));
 
     return builder.build();
+  }
+
+  private MessageEmbed getClaimEmbed(String helperId) {
+    return new EmbedBuilder()
+        .setDescription("Helper <@" + helperId + "> entered into consideration")
+        .setColor(new Color(4, 203, 116))
+        .build();
   }
 }

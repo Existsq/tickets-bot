@@ -10,24 +10,14 @@ import org.jetbrains.annotations.NotNull;
 public class TicketCloseHandler implements ButtonInteractionHandler {
 
   @Override
-  public boolean handle(@NotNull ButtonInteractionEvent event) {
-    if (event.getButton().getId().equals("ticket_close")) {
-      event.deferEdit().queue();
-      processClose(event);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  private void processClose(@NotNull ButtonInteractionEvent event) {
+  public void handle(@NotNull ButtonInteractionEvent event) {
+    event.deferEdit().queue();
     Emoji confirmEmoji = Emoji.fromFormatted("<:opened:1268134183591608406>");
-    event
-        .getHook()
-        .editOriginalComponents(
-            ActionRow.of(
-                Button.success("close_confirmation", "Confirm").withEmoji(confirmEmoji),
-                Button.primary("cancel_closing", "\uD83D\uDD19  Back")))
-        .queue();
+    ActionRow closeButtons =
+        ActionRow.of(
+            Button.success("close_confirmation", "Confirm").withEmoji(confirmEmoji),
+            Button.primary("cancel_closing", "\uD83D\uDD19  Back"));
+
+    event.getMessage().editMessageComponents(closeButtons).queue();
   }
 }

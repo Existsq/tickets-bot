@@ -9,17 +9,8 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 public class ClearCommandHandler implements SlashCommandInteractionHandler {
 
   @Override
-  public boolean handle(SlashCommandInteractionEvent event) {
-    if (event.getName().equals("clear")) {
-      event.deferReply().setEphemeral(true).queue();
-      clearMessages(event);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  private void clearMessages(SlashCommandInteractionEvent event) {
+  public void handle(SlashCommandInteractionEvent event) {
+    event.deferReply().setEphemeral(true).queue();
     Member author = event.getMember();
     int amount = event.getOption("amount").getAsInt();
 
@@ -29,7 +20,7 @@ public class ClearCommandHandler implements SlashCommandInteractionHandler {
         List<Message> messages =
             event.getMessageChannel().getHistory().retrievePast(amount).complete();
         event.getMessageChannel().purgeMessages(messages);
-        event.getHook().sendMessage("Clearing all out!").queue();
+        event.getHook().sendMessage("Clearing " + amount + " messages!").queue();
       } else {
         event.getHook().sendMessage("Amount above the limit! Enter number below 25").queue();
       }

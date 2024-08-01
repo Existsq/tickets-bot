@@ -4,5 +4,5 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 public interface ButtonInteractionHandler {
 
-  boolean handle(ButtonInteractionEvent event);
+  void handle(ButtonInteractionEvent event);
 }

@@ -15,17 +15,8 @@ public class BanCommandHandler implements SlashCommandInteractionHandler {
   @Autowired private UserRepository userRepository;
 
   @Override
-  public boolean handle(@NotNull SlashCommandInteractionEvent event) {
-    if (event.getName().equals("ban")) {
-      event.deferReply().setEphemeral(true).queue();
-      banUser(event);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  private void banUser(SlashCommandInteractionEvent event) {
+  public void handle(@NotNull SlashCommandInteractionEvent event) {
+    event.deferReply().setEphemeral(true).queue();
     User userToBan = event.getOption("user").getAsUser();
     String reason = event.getOption("reason").getAsString();
     int delDaysMessages = event.getOption("days").getAsInt();

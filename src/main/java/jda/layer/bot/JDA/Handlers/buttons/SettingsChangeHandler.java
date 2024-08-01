@@ -6,14 +6,5 @@ import org.jetbrains.annotations.NotNull;
 public class SettingsChangeHandler implements ButtonInteractionHandler {
 
   @Override
-  public boolean handle(@NotNull ButtonInteractionEvent event) {
-    if (event.getButton().getId().equals("ticket_settings")) {
-      processSettings(event);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  private void processSettings(@NotNull ButtonInteractionEvent event) {}
+  public void handle(@NotNull ButtonInteractionEvent event) {}
 }

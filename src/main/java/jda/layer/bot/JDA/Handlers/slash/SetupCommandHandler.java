@@ -20,17 +20,8 @@ public class SetupCommandHandler implements SlashCommandInteractionHandler {
   private static final Logger log = LoggerFactory.getLogger(SetupCommandHandler.class);
 
   @Override
-  public boolean handle(@NotNull SlashCommandInteractionEvent event) {
-    if (event.getName().equals("setup-auto")) {
-      event.deferReply().setEphemeral(true).queue();
-      setupGuild(event);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  private void setupGuild(SlashCommandInteractionEvent event) {
+  public void handle(@NotNull SlashCommandInteractionEvent event) {
+    event.deferReply().setEphemeral(true).queue();
     Guild guild = event.getGuild();
     int topPosition = guild.getCategories().getFirst().getPosition();
 
@@ -116,6 +107,12 @@ public class SetupCommandHandler implements SlashCommandInteractionHandler {
     return new EmbedBuilder()
         .setTitle("**Get Support**")
         .setDescription("Click on the button corresponding to the type of ticket you wish to open.")
+        .setColor(new Color(0, 152, 217))
+        .setImage(
+            "https://cdn.discordapp.com/attachments/1264918322223517739/1268519513213632574/openTicket.jpg?ex=66acb85b&is=66ab66db&hm=96b6bfeae757a0df7b717864358367c5b4b9cee5ddc32074d6a391efc5debe45&")
+        .setFooter(
+            "Tickets Bot",
+            "https://cdn.discordapp.com/attachments/1264918322223517739/1268520767822233681/IMG_5276.JPG?ex=66acb987&is=66ab6807&hm=3959d9cbc81d990b93bc962de14df60746ada88a9c1b05f2126d675aa5f5b0a2&")
         .build();
   }
 }

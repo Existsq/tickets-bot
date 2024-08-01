@@ -10,39 +10,30 @@ import org.jetbrains.annotations.NotNull;
 public class TicketBackHandler implements ButtonInteractionHandler {
 
   @Override
-  public boolean handle(@NotNull ButtonInteractionEvent event) {
-    if (event.getButton().getId().equals("cancel_closing")) {
-      event.deferEdit().queue();
-      processBack(event);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  private void processBack(@NotNull ButtonInteractionEvent event) {
+  public void handle(@NotNull ButtonInteractionEvent event) {
+    event.deferEdit().queue();
     Field statusCode =
         event.getMessage().getEmbeds().getFirst().getFields().stream()
             .filter(field -> field.getName().contains("Status"))
             .findFirst()
             .orElse(null);
 
-    if (statusCode.getValue().contains("Awaiting")) {
-      event
-          .getHook()
-          .editOriginalComponents(
-              ActionRow.of(
-                  Button.danger("ticket_close", "\uD83D\uDD10 Close ticket"),
-                  Button.success("claim_ticket", "\uD83C\uDF9F\uFE0F Claim Ticket")))
-          .queue();
+    ActionRow unclaimedButtons =
+        ActionRow.of(
+            Button.danger("close_ticket", "\uD83D\uDD10 Close ticket"),
+            Button.success("claim_ticket", "\uD83C\uDF9F\uFE0F Claim Ticket"));
+
+    ActionRow claimedButtons =
+        ActionRow.of(
+            Button.danger("close_ticket", "\uD83D\uDD10 Close ticket"),
+            Button.secondary("unclaim_ticket", "Unclaim Ticket"));
+
+    boolean isAwaited = statusCode.getValue().contains("Awaiting");
+
+    if (isAwaited) {
+      event.getMessage().editMessageComponents(unclaimedButtons).queue();
     } else {
-      event
-          .getHook()
-          .editOriginalComponents(
-              ActionRow.of(
-                  Button.danger("ticket_close", "\uD83D\uDD10 Close ticket"),
-                  Button.secondary("unclaim_ticket", "Unclaim Ticket")))
-          .queue();
+      event.getMessage().editMessageComponents(claimedButtons).queue();
     }
   }
 }

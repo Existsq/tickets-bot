@@ -57,6 +57,11 @@ public class TicketCreationService {
     String issueReason = event.getValue("description").getAsString();
     long userId = Long.parseLong(event.getMember().getId());
 
+    ActionRow initPanelButtons =
+        ActionRow.of(
+            Button.danger("close_ticket", "\uD83D\uDD10 Close Ticket"),
+            Button.success("claim_ticket", "\uD83C\uDF9F\uFE0F Claim Ticket"));
+
     assert guild != null;
     Category openTicketsCategory = Settings.getTicketsCategory(guild, "OPENED TICKETS");
 
@@ -89,10 +94,7 @@ public class TicketCreationService {
               // Sending a welcome message to textChannel with buttons
               textChannel
                   .sendMessageEmbeds(createTicketChannelEmbed(issueTitle, issueReason))
-                  .addComponents(
-                      ActionRow.of(
-                          Button.danger("ticket_close", "\uD83D\uDD10 Close Ticket"),
-                          Button.success("claim_ticket", "\uD83C\uDF9F\uFE0F Claim Ticket")))
+                  .addComponents(initPanelButtons)
                   .queue();
 
               // Sending response message to user with info
@@ -102,9 +104,6 @@ public class TicketCreationService {
                   .queue();
             },
             (failure) ->
-                event
-                    .getHook()
-                    .sendMessage("Sorry, but I can not open new ticket now :(")
-                    .queue());
+                event.getHook().sendMessage("Sorry, but I can not open new ticket now :(").queue());
   }
 }

@@ -16,16 +16,7 @@ public class TicketOpenHandler implements ButtonInteractionHandler {
   private final int USER_LIMIT = Settings.getTicketsPerUserLimit();
 
   @Override
-  public boolean handle(@NotNull ButtonInteractionEvent event) {
-    if (event.getButton().getId().equals("open_ticket")) {
-      showModal(event);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  private void showModal(@NotNull ButtonInteractionEvent event) {
+  public void handle(@NotNull ButtonInteractionEvent event) {
     int userTicketsAmount = 0;
 
     if (userTicketsAmount < USER_LIMIT) {
@@ -50,11 +41,7 @@ public class TicketOpenHandler implements ButtonInteractionHandler {
 
       event.replyModal(modal).queue();
     } else {
-      event
-          .getChannel()
-          .asTextChannel()
-          .sendMessage("Sorry, but your limit of tickets is exceeded")
-          .queue();
+      event.reply("Sorry, but your limit of tickets is exceeded").setEphemeral(true).queue();
     }
   }
 }

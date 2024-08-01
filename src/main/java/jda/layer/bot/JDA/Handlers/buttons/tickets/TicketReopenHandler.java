@@ -3,6 +3,7 @@ package jda.layer.bot.JDA.Handlers.buttons.tickets;
 import java.awt.Color;
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import jda.layer.bot.JDA.Handlers.buttons.ButtonInteractionHandler;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -16,22 +17,13 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 public class TicketReopenHandler implements ButtonInteractionHandler {
 
   @Override
-  public boolean handle(ButtonInteractionEvent event) {
-    if (event.getButton().getId().equals("reopen_ticket")) {
-      event.deferReply().queue();
-      reopenTicket(event);
-      return true;
-    }
-    return false;
-  }
-
-  private void reopenTicket(ButtonInteractionEvent event) {
+  public void handle(ButtonInteractionEvent event) {
     Guild guild = event.getGuild();
     List<Field> embedFields = event.getMessage().getEmbeds().getFirst().getFields();
     Category openedCategory = guild.getCategoriesByName("OPENED TICKETS", false).getFirst();
     Category activeCategory = guild.getCategoriesByName("ACTIVE TICKETS", false).getFirst();
 
-    if (embedFields.get(embedFields.size() - 3).getValue().equals("-")) {
+    if (Objects.equals(embedFields.get(embedFields.size() - 3).getValue(), "-")) {
       event.getChannel().asTextChannel().getManager().setParent(openedCategory).queue();
       event
           .getMessage()
@@ -41,7 +33,7 @@ public class TicketReopenHandler implements ButtonInteractionHandler {
           .getMessage()
           .editMessageComponents(
               ActionRow.of(
-                  Button.danger("ticket_close", "\uD83D\uDD10 Close Ticket"),
+                  Button.danger("close_ticket", "\uD83D\uDD10 Close Ticket"),
                   Button.success("claim_ticket", "\uD83C\uDF9F\uFE0F Claim Ticket")))
           .queue();
     } else {
@@ -58,21 +50,18 @@ public class TicketReopenHandler implements ButtonInteractionHandler {
           .getMessage()
           .editMessageComponents(
               ActionRow.of(
-                  Button.danger("ticket_close", "\uD83D\uDD10 Close Ticket"),
+                  Button.danger("close_ticket", "\uD83D\uDD10 Close Ticket"),
                   Button.secondary("unclaim_ticket", "Unclaim Ticket")))
           .queue();
     }
-    event
-        .getHook()
-        .sendMessageEmbeds(
-            new EmbedBuilder()
-                .setTitle("Reopened Ticket")
-                .setDescription("The ticket was reopened")
-                .setTimestamp(Instant.now())
-                .setFooter("Closed")
-                .setColor(new Color(84, 172, 238))
-                .build())
-        .queue();
+    event.replyEmbeds(getReopenedEmbed(event.getMember().getId())).queue();
+  }
+
+  private MessageEmbed getReopenedEmbed(String reopenerId) {
+    return new EmbedBuilder()
+        .setDescription("The ticket was reopened by <@" + reopenerId + ">")
+        .setColor(new Color(84, 172, 238))
+        .build();
   }
 
   private MessageEmbed getEmbedForOpened(MessageEmbed messageToEdit) {

@@ -4,5 +4,5 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 public interface SlashCommandInteractionHandler {
 
-  boolean handle(SlashCommandInteractionEvent event);
+  void handle(SlashCommandInteractionEvent event);
 }

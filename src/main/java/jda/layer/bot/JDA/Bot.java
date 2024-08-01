@@ -1,6 +1,6 @@
 package jda.layer.bot.JDA;
 
-import java.util.Set;
+import java.util.Map;
 import jda.layer.bot.JDA.Handlers.HandlerInitializer;
 import jda.layer.bot.JDA.Handlers.buttons.ButtonInteractionHandler;
 import jda.layer.bot.JDA.Handlers.modals.ModalInteractionHandler;
@@ -28,24 +28,12 @@ public class Bot extends ListenerAdapter {
 
   private static final Logger log = LoggerFactory.getLogger(Bot.class);
 
-  private final Set<ButtonInteractionHandler> BUTTON_HANDLERS =
-      HandlerInitializer.initButtonHandlers();
-  private final Set<ModalInteractionHandler> MODAL_HANDLERS =
-      HandlerInitializer.initModalHandlers();
-  private final Set<SlashCommandInteractionHandler> SLASH_HANDLERS =
-      HandlerInitializer.initSlashCommandHandlers();
-
-  //  @Override
-  //  public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-  //    event
-  //        .getMember()
-  //        .getUser()
-  //        .openPrivateChannel()
-  //        .flatMap(channel -> channel.sendMessage("content"))
-  //        .delay(30, TimeUnit.SECONDS)
-  //        .flatMap(Message::delete)
-  //        .queue();
-  //  }
+  private final Map<String, ButtonInteractionHandler> BUTTON_HANDLERS =
+      HandlerInitializer.initButtonHandlersMap();
+  private final Map<String, ModalInteractionHandler> MODAL_HANDLERS =
+      HandlerInitializer.initModalHandlersMap();
+  private final Map<String, SlashCommandInteractionHandler> SLASH_HANDLERS =
+      HandlerInitializer.initSlashCommandHandlersMap();
 
   // Event on Bot Guild Join
   @Override
@@ -87,38 +75,40 @@ public class Bot extends ListenerAdapter {
                                 "Amount of days to delete user`s messages"),
                         Commands.slash("unban", "Unbans the user who has been banned!")
                             .addOption(OptionType.USER, "user", "User who needs to be unbanned"),
-                        Commands.slash("setup-auto", "Auto setup creating all from scratch"))
+                        Commands.slash("setup-auto", "Auto setup creating all from scratch"),
+                        Commands.slash("delete-channel", "Deletes option text channel")
+                            .addOption(OptionType.CHANNEL, "channel", "Channel to delete"))
                     .queue());
     log.info("Bot is running!");
   }
 
   @Override
   public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
-    for (ButtonInteractionHandler handler : BUTTON_HANDLERS) {
-      if (handler.handle(event)) {
-        return;
-      }
+    String buttonId = event.getButton().getId();
+    try {
+      BUTTON_HANDLERS.get(buttonId).handle(event);
+    } catch (Exception e) {
+      event.reply("Sorry, but this button not working now _/(*_*)\\_").setEphemeral(true).queue();
     }
-    event.getHook().sendMessage("Error occurred!").setEphemeral(true).queue();
   }
 
   @Override
   public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-    for (SlashCommandInteractionHandler handler : SLASH_HANDLERS) {
-      if (handler.handle(event)) {
-        return;
-      }
+    String commandName = event.getName();
+    try {
+      SLASH_HANDLERS.get(commandName).handle(event);
+    } catch (Exception e) {
+      event.reply("Sorry, but this command not working now _/(*_*)\\_").setEphemeral(true).queue();
     }
-    event.getHook().sendMessage("Error occurred!").setEphemeral(true).queue();
   }
 
   @Override
   public void onModalInteraction(@NotNull ModalInteractionEvent event) {
-    for (ModalInteractionHandler handler : MODAL_HANDLERS) {
-      if (handler.handle(event)) {
-        return;
-      }
+    String modalId = event.getModalId();
+    try {
+      MODAL_HANDLERS.get(modalId).handle(event);
+    } catch (Exception e) {
+      event.reply("Sorry, but this command not working now _/(*_*)\\_").setEphemeral(true).queue();
     }
-    event.getHook().sendMessage("Error occurred!").setEphemeral(true).queue();
   }
 }
