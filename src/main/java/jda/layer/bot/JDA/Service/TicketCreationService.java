@@ -97,8 +97,7 @@ public class TicketCreationService {
 
               // Sending response message to user with info
               event
-                  .getChannel()
-                  .asTextChannel()
+                  .getHook()
                   .sendMessageEmbeds(createSuccessEmbed(textChannel.getId(), textChannel.getName()))
                   .queue();
             },
