@@ -54,20 +54,28 @@ public class SetupCommandHandler implements SlashCommandInteractionHandler {
                     .getManager()
                     .putRolePermissionOverride(
                         helperRole.getIdLong(),
-                        EnumSet.of(Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL),
-                        EnumSet.of(Permission.MANAGE_PERMISSIONS))
+                        TicketsPermissions.allowSupportRolePermsInAudit,
+                        TicketsPermissions.denySupportRolePermsInAudit)
                     .putPermissionOverride(
-                        event.getGuild().getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL))
+                        event.getGuild().getPublicRole(),
+                        null,
+                        EnumSet.of(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND))
                     .queue());
 
     guild
         .createTextChannel("open-ticket")
+        .addPermissionOverride(
+            guild.getPublicRole(),
+            TicketsPermissions.allowSupportRolePermsInAudit,
+            TicketsPermissions.denySupportRolePermsInAudit)
         .queue(
             textChannel ->
                 textChannel
                     .sendMessageEmbeds(getInitEmbed())
                     .addComponents(
-                        ActionRow.of(Button.success("open_ticket", "\uD83D\uDD13 Open Ticket")))
+                        ActionRow.of(
+                            Button.success("open_ticket", "\uD83D\uDD13 Open Ticket"),
+                            Button.primary("faq", "FAQ")))
                     .queue());
 
     // Creating all categories
@@ -75,8 +83,9 @@ public class SetupCommandHandler implements SlashCommandInteractionHandler {
         .createCategory("ACTIVE TICKETS")
         .addRolePermissionOverride(
             helperRole.getIdLong(),
-            EnumSet.of(Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL),
-            EnumSet.of(Permission.MANAGE_PERMISSIONS))
+            TicketsPermissions.allowSupportRolePermsInCategories,
+            TicketsPermissions.denySupportRolePermsInCategories)
+        .addPermissionOverride(guild.getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL))
         .setPosition(topPosition)
         .queue();
 
@@ -84,8 +93,9 @@ public class SetupCommandHandler implements SlashCommandInteractionHandler {
         .createCategory("OPENED TICKETS")
         .addRolePermissionOverride(
             helperRole.getIdLong(),
-            EnumSet.of(Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL),
-            EnumSet.of(Permission.MANAGE_PERMISSIONS))
+            TicketsPermissions.allowSupportRolePermsInCategories,
+            TicketsPermissions.denySupportRolePermsInCategories)
+        .addPermissionOverride(guild.getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL))
         .setPosition(topPosition + 1)
         .queue();
 
@@ -93,8 +103,9 @@ public class SetupCommandHandler implements SlashCommandInteractionHandler {
         .createCategory("CLOSED TICKETS")
         .addRolePermissionOverride(
             helperRole.getIdLong(),
-            EnumSet.of(Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL),
-            EnumSet.of(Permission.MANAGE_PERMISSIONS))
+            TicketsPermissions.allowSupportRolePermsInCategories,
+            TicketsPermissions.denySupportRolePermsInCategories)
+        .addPermissionOverride(guild.getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL))
         .setPosition(topPosition + 2)
         .queue();
 
