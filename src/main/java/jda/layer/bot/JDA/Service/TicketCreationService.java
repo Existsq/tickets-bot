@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -65,7 +64,6 @@ public class TicketCreationService {
     assert guild != null;
     Category openTicketsCategory = Settings.getTicketsCategory(guild, "OPENED TICKETS");
 
-    Role helperRole = event.getGuild().getRolesByName("Ticket Support", true).getFirst();
 
     // Creating new TextChannel in Category
     event

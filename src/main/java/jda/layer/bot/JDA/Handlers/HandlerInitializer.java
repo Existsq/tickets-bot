@@ -1,24 +1,24 @@
 package jda.layer.bot.JDA.Handlers;
 
 import java.util.Map;
-import jda.layer.bot.JDA.Handlers.buttons.ButtonInteractionHandler;
-import jda.layer.bot.JDA.Handlers.buttons.SettingsChangeHandler;
-import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketBackHandler;
-import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketClaimHandler;
-import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketCloseHandler;
-import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketConfirmCloseHandler;
-import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketDeleteHandler;
-import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketOpenHandler;
-import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketReopenHandler;
-import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketUnclaimHandler;
-import jda.layer.bot.JDA.Handlers.modals.ModalInteractionHandler;
-import jda.layer.bot.JDA.Handlers.modals.TicketCreationModalHandler;
-import jda.layer.bot.JDA.Handlers.slash.BanCommandHandler;
-import jda.layer.bot.JDA.Handlers.slash.ClearCommandHandler;
-import jda.layer.bot.JDA.Handlers.slash.DeleteChannelCommandHandler;
-import jda.layer.bot.JDA.Handlers.slash.SetupCommandHandler;
-import jda.layer.bot.JDA.Handlers.slash.SlashCommandInteractionHandler;
-import jda.layer.bot.JDA.Handlers.slash.UnbanCommandHandler;
+import jda.layer.bot.JDA.Handlers.buttons.ButtonInteraction;
+import jda.layer.bot.JDA.Handlers.buttons.SettingsChange;
+import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketBack;
+import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketClaim;
+import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketClose;
+import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketConfirmClose;
+import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketDelete;
+import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketOpen;
+import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketReopen;
+import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketUnclaim;
+import jda.layer.bot.JDA.Handlers.modals.ModalInteraction;
+import jda.layer.bot.JDA.Handlers.modals.TicketCreationModal;
+import jda.layer.bot.JDA.Handlers.slash.BanCommand;
+import jda.layer.bot.JDA.Handlers.slash.ClearCommand;
+import jda.layer.bot.JDA.Handlers.slash.DeleteCommand;
+import jda.layer.bot.JDA.Handlers.slash.SetupCommand;
+import jda.layer.bot.JDA.Handlers.slash.SlashCommandInteraction;
+import jda.layer.bot.JDA.Handlers.slash.UnbanCommand;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,43 +26,43 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class HandlerInitializer {
 
-  public static Map<String, ButtonInteractionHandler> initButtonHandlersMap() {
+  public static Map<String, ButtonInteraction> initButtonHandlersMap() {
     return Map.of(
         "ticket_settings",
-        new SettingsChangeHandler(),
+        new SettingsChange(),
         "close_ticket",
-        new TicketCloseHandler(),
+        new TicketClose(),
         "close_confirmation",
-        new TicketConfirmCloseHandler(),
+        new TicketConfirmClose(),
         "cancel_closing",
-        new TicketBackHandler(),
+        new TicketBack(),
         "open_ticket",
-        new TicketOpenHandler(),
+        new TicketOpen(),
         "claim_ticket",
-        new TicketClaimHandler(),
+        new TicketClaim(),
         "delete_ticket",
-        new TicketDeleteHandler(),
+        new TicketDelete(),
         "unclaim_ticket",
-        new TicketUnclaimHandler(),
+        new TicketUnclaim(),
         "reopen_ticket",
-        new TicketReopenHandler());
+        new TicketReopen());
   }
 
-  public static Map<String, ModalInteractionHandler> initModalHandlersMap() {
-    return Map.of("ticket_form", new TicketCreationModalHandler());
+  public static Map<String, ModalInteraction> initModalHandlersMap() {
+    return Map.of("ticket_form", new TicketCreationModal());
   }
 
-  public static Map<String, SlashCommandInteractionHandler> initSlashCommandHandlersMap() {
+  public static Map<String, SlashCommandInteraction> initSlashCommandHandlersMap() {
     return Map.of(
         "clear",
-        new ClearCommandHandler(),
+        new ClearCommand(),
         "ban",
-        new BanCommandHandler(),
+        new BanCommand(),
         "unban",
-        new UnbanCommandHandler(),
+        new UnbanCommand(),
         "setup-auto",
-        new SetupCommandHandler(),
-        "delete-channel",
-        new DeleteChannelCommandHandler());
+        new SetupCommand(),
+        "delete",
+        new DeleteCommand());
   }
 }

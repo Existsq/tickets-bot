@@ -1,7 +1,7 @@
 package jda.layer.bot.JDA.Handlers.buttons.tickets;
 
 import jda.layer.bot.JDA.Config.Settings;
-import jda.layer.bot.JDA.Handlers.buttons.ButtonInteractionHandler;
+import jda.layer.bot.JDA.Handlers.buttons.ButtonInteraction;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TicketOpenHandler implements ButtonInteractionHandler {
+public class TicketOpen implements ButtonInteraction {
 
   private final int USER_LIMIT = Settings.getTicketsPerUserLimit();
 

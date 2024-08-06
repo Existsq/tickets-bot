@@ -122,19 +122,17 @@ public interface TicketsPermissions {
           Permission.USE_EMBEDDED_ACTIVITIES);
 
   EnumSet<Permission> allowSupportRolePermsInCategories =
+      EnumSet.of(Permission.MESSAGE_HISTORY, Permission.VIEW_CHANNEL);
+
+  EnumSet<Permission> denySupportRolePermsInCategories =
       EnumSet.of(
           Permission.MESSAGE_SEND,
-          Permission.MESSAGE_HISTORY,
-          Permission.MESSAGE_EMBED_LINKS,
           Permission.MESSAGE_ATTACH_FILES,
+          Permission.MESSAGE_EMBED_LINKS,
           Permission.MESSAGE_ADD_REACTION,
           Permission.MESSAGE_EXT_EMOJI,
           Permission.MESSAGE_EXT_STICKER,
           Permission.MESSAGE_ATTACH_VOICE_MESSAGE,
-          Permission.VIEW_CHANNEL);
-
-  EnumSet<Permission> denySupportRolePermsInCategories =
-      EnumSet.of(
           Permission.CREATE_INSTANT_INVITE,
           Permission.MANAGE_CHANNEL,
           Permission.MANAGE_PERMISSIONS,

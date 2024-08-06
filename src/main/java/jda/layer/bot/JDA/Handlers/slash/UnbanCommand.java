@@ -3,7 +3,7 @@ package jda.layer.bot.JDA.Handlers.slash;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class UnbanCommandHandler implements SlashCommandInteractionHandler {
+public class UnbanCommand implements SlashCommandInteraction {
 
   @Override
   public void handle(SlashCommandInteractionEvent event) {

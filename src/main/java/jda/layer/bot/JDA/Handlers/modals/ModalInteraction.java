@@ -2,7 +2,7 @@ package jda.layer.bot.JDA.Handlers.modals;
 
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 
-public interface ModalInteractionHandler {
+public interface ModalInteraction {
 
   void handle(ModalInteractionEvent event);
 }

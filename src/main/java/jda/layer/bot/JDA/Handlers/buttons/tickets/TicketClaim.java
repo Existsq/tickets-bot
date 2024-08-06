@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.util.EnumSet;
 import java.util.List;
 import jda.layer.bot.JDA.Config.TicketsPermissions;
-import jda.layer.bot.JDA.Handlers.buttons.ButtonInteractionHandler;
+import jda.layer.bot.JDA.Handlers.buttons.ButtonInteraction;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-public class TicketClaimHandler implements ButtonInteractionHandler {
+public class TicketClaim implements ButtonInteraction {
 
   @Override
   public void handle(ButtonInteractionEvent event) {
@@ -32,9 +32,12 @@ public class TicketClaimHandler implements ButtonInteractionHandler {
 
     Category activeTicketCategory =
         event.getGuild().getCategories().stream()
-            .filter(category -> category.getName().equals("ACTIVE TICKETS"))
+            .filter(category -> category.getName().equals("CLAIMED TICKETS"))
             .findFirst()
             .get();
+
+    long helperRoleId =
+        Long.parseLong(event.getGuild().getRolesByName("ticket support", true).getFirst().getId());
 
     if (hasRole) {
       // Setting up TextChannel Category and Permissions
@@ -48,6 +51,7 @@ public class TicketClaimHandler implements ButtonInteractionHandler {
               Long.parseLong(event.getMember().getId()),
               TicketsPermissions.allowHelperPerms,
               TicketsPermissions.denyHelperPerms)
+          .removePermissionOverride(helperRoleId)
           .queue();
 
       // Editing buttons for panel
@@ -65,7 +69,7 @@ public class TicketClaimHandler implements ButtonInteractionHandler {
     } else {
       // Sending message if member does not have helper role
       event
-          .reply("Sorry, but this option is only for helpers (Support Ticket Role)")
+          .reply("You are not allowed to use this panel")
           .setEphemeral(true)
           .queue();
     }

@@ -3,7 +3,7 @@ package jda.layer.bot.JDA.Handlers.slash;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class DeleteChannelCommandHandler implements SlashCommandInteractionHandler {
+public class DeleteCommand implements SlashCommandInteraction {
 
   @Override
   public void handle(SlashCommandInteractionEvent event) {

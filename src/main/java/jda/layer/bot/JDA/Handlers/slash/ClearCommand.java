@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class ClearCommandHandler implements SlashCommandInteractionHandler {
+public class ClearCommand implements SlashCommandInteraction {
 
   @Override
   public void handle(SlashCommandInteractionEvent event) {

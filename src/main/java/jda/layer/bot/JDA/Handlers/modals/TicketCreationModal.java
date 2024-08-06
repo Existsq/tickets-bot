@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TicketCreationModalHandler implements ModalInteractionHandler {
+public class TicketCreationModal implements ModalInteraction {
 
   private final TicketCreationService ticketCreationService = new TicketCreationService();
 

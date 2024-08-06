@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BanCommandHandler implements SlashCommandInteractionHandler {
+public class BanCommand implements SlashCommandInteraction {
 
   @Autowired private UserRepository userRepository;
 
