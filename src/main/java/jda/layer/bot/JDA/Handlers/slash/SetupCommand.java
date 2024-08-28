@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.EnumSet;
 import java.util.concurrent.CompletableFuture;
 import jda.layer.bot.JDA.Config.TicketsPermissions;
-import jda.layer.bot.Repository.GuildRepository;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -17,8 +16,9 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SetupCommand implements SlashCommandInteraction {
 
   private static final Logger log = LoggerFactory.getLogger(SetupCommand.class);

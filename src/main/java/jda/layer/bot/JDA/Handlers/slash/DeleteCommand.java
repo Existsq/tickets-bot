@@ -2,7 +2,9 @@ package jda.layer.bot.JDA.Handlers.slash;
 
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DeleteCommand implements SlashCommandInteraction {
 
   @Override

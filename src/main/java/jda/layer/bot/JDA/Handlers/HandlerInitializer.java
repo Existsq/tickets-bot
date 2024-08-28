@@ -3,6 +3,7 @@ package jda.layer.bot.JDA.Handlers;
 import java.util.Map;
 import jda.layer.bot.JDA.Handlers.buttons.ButtonInteraction;
 import jda.layer.bot.JDA.Handlers.buttons.SettingsChange;
+import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketArchive;
 import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketBack;
 import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketClaim;
 import jda.layer.bot.JDA.Handlers.buttons.tickets.TicketClose;
@@ -20,49 +21,29 @@ import jda.layer.bot.JDA.Handlers.slash.SetupCommand;
 import jda.layer.bot.JDA.Handlers.slash.SlashCommandInteraction;
 import jda.layer.bot.JDA.Handlers.slash.UnbanCommand;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.Map;
+
+@Getter
 @Component
-@AllArgsConstructor
 public class HandlerInitializer {
 
-  public static Map<String, ButtonInteraction> initButtonHandlersMap() {
-    return Map.of(
-        "ticket_settings",
-        new SettingsChange(),
-        "close_ticket",
-        new TicketClose(),
-        "close_confirmation",
-        new TicketConfirmClose(),
-        "cancel_closing",
-        new TicketBack(),
-        "open_ticket",
-        new TicketOpen(),
-        "claim_ticket",
-        new TicketClaim(),
-        "delete_ticket",
-        new TicketDelete(),
-        "unclaim_ticket",
-        new TicketUnclaim(),
-        "reopen_ticket",
-        new TicketReopen());
-  }
+  private final Map<String, ButtonInteraction> buttonHandlers;
+  private final Map<String, ModalInteraction> modalHandlers;
+  private final Map<String, SlashCommandInteraction> slashHandlers;
 
-  public static Map<String, ModalInteraction> initModalHandlersMap() {
-    return Map.of("ticket_form", new TicketCreationModal());
-  }
-
-  public static Map<String, SlashCommandInteraction> initSlashCommandHandlersMap() {
-    return Map.of(
-        "clear",
-        new ClearCommand(),
-        "ban",
-        new BanCommand(),
-        "unban",
-        new UnbanCommand(),
-        "setup-auto",
-        new SetupCommand(),
-        "delete",
-        new DeleteCommand());
+  @Autowired
+  public HandlerInitializer(
+      Map<String, ButtonInteraction> buttonHandlers,
+      Map<String, ModalInteraction> modalHandlers,
+      Map<String, SlashCommandInteraction> slashHandlers) {
+    this.buttonHandlers = buttonHandlers;
+    this.modalHandlers = modalHandlers;
+    this.slashHandlers = slashHandlers;
   }
 }

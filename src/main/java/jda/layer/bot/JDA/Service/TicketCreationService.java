@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.EnumSet;
 import jda.layer.bot.JDA.Config.Settings;
 import jda.layer.bot.JDA.Config.TicketsPermissions;
-import lombok.AllArgsConstructor;
+import jda.layer.bot.Repository.UserRepository;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -15,11 +15,18 @@ import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
 public class TicketCreationService {
+
+  private final UserRepository userRepository;
+
+  @Autowired
+  public TicketCreationService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
   private MessageEmbed createSuccessEmbed(String channelId, String channelName) {
     return new EmbedBuilder()
@@ -63,7 +70,6 @@ public class TicketCreationService {
 
     assert guild != null;
     Category openTicketsCategory = Settings.getTicketsCategory(guild, "OPENED TICKETS");
-
 
     // Creating new TextChannel in Category
     event

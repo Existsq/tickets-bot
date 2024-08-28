@@ -7,5 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface GuildRepository extends JpaRepository<GuildEntity, Integer> {
 
   Optional<GuildEntity> findGuildEntityByGuildId(long guildId);
-
 }

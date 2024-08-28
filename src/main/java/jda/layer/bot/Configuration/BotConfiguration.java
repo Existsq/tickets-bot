@@ -2,6 +2,7 @@ package jda.layer.bot.Configuration;
 
 import java.util.EnumSet;
 import jda.layer.bot.JDA.Bot;
+import jda.layer.bot.JDA.Handlers.HandlerInitializer;
 import jda.layer.bot.Repository.GuildRepository;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -18,31 +19,36 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BotConfiguration {
 
-  private final GuildRepository guildRepository;
-
   @Value("${bot.token}")
-  private String TOKEN;
+  private String token;
 
-  public BotConfiguration(GuildRepository guildRepository) {
+  private final GuildRepository guildRepository;
+  private final HandlerInitializer handlerInitializer;
+
+  public BotConfiguration(GuildRepository guildRepository, HandlerInitializer handlerInitializer) {
     this.guildRepository = guildRepository;
+    this.handlerInitializer = handlerInitializer;
   }
 
   @Bean
-  public JDA JDA() {
+  public JDA jda() {
     try {
       JDA jda =
-          JDABuilder.createDefault(TOKEN)
-              .setActivity(Activity.customStatus("DEVELOPING"))
+          JDABuilder.createDefault(token)
+              .setActivity(Activity.playing("DEVELOPING"))
               .setStatus(OnlineStatus.DO_NOT_DISTURB)
               .setMemberCachePolicy(MemberCachePolicy.ALL)
               .setChunkingFilter(ChunkingFilter.ALL)
               .enableIntents(EnumSet.of(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS))
               .enableCache(EnumSet.of(CacheFlag.MEMBER_OVERRIDES))
               .build();
-      jda.addEventListener(new Bot(guildRepository));
+
+      Bot bot = new Bot(guildRepository, handlerInitializer);
+      jda.addEventListener(bot);
+
       return jda;
     } catch (Exception e) {
-      throw new IllegalArgumentException("Provide a bot token!");
+      throw new IllegalArgumentException("Provide a valid bot token!", e);
     }
   }
 }

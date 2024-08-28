@@ -13,8 +13,15 @@ import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TicketUnclaim implements ButtonInteraction {
+
+  private final ActionRow afterUnclaimButtons =
+      ActionRow.of(
+          Button.danger("close_ticket", "\uD83D\uDD10 Close Ticket"),
+          Button.success("claim_ticket", "\uD83C\uDF9F\uFE0F Claim Ticket"));
 
   @Override
   public void handle(ButtonInteractionEvent event) {
@@ -34,10 +41,6 @@ public class TicketUnclaim implements ButtonInteraction {
       long helperRoleId =
           Long.parseLong(
               event.getGuild().getRolesByName("Ticket Support", true).getFirst().getId());
-      ActionRow afterUnclaimButtons =
-          ActionRow.of(
-              Button.danger("close_ticket", "\uD83D\uDD10 Close Ticket"),
-              Button.success("claim_ticket", "\uD83C\uDF9F\uFE0F Claim Ticket"));
 
       Category openedCategory =
           guild.getCategories().stream()

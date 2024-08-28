@@ -2,7 +2,9 @@ package jda.layer.bot.JDA.Handlers.slash;
 
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UnbanCommand implements SlashCommandInteraction {
 
   @Override
