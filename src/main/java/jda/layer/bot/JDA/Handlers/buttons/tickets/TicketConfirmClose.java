@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 import jda.layer.bot.JDA.Config.TicketsPermissions;
 import jda.layer.bot.JDA.Handlers.buttons.ButtonInteraction;
+import jda.layer.bot.JDA.Security.RequiresRole;
 import jda.layer.bot.JDA.Utils.GuildUtils;
 import jda.layer.bot.JDA.Utils.TicketUtils;
 import jda.layer.bot.JDA.Utils.UserUtils;
@@ -40,6 +41,7 @@ public class TicketConfirmClose implements ButtonInteraction {
           Button.danger("delete_ticket", "Delete Ticket"),
           Button.secondary("archive_ticket", "Archive Ticket"));
 
+  @RequiresRole(roles = {"HELPER", "ADMIN"})
   @Override
   public void handle(@NotNull ButtonInteractionEvent event) {
     Guild guild = Objects.requireNonNull(event.getGuild());

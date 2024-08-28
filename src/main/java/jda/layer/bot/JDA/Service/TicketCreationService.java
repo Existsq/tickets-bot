@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.EnumSet;
 import jda.layer.bot.JDA.Config.Settings;
 import jda.layer.bot.JDA.Config.TicketsPermissions;
-import jda.layer.bot.Repository.UserRepository;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -21,12 +20,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class TicketCreationService {
 
-  private final UserRepository userRepository;
-
-  @Autowired
-  public TicketCreationService(UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
+//  private final UserRepository userRepository;
+//
+//  @Autowired
+//  public TicketCreationService(UserRepository userRepository) {
+//    this.userRepository = userRepository;
+//  }
 
   private MessageEmbed createSuccessEmbed(String channelId, String channelName) {
     return new EmbedBuilder()

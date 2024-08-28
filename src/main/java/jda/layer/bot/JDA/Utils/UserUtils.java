@@ -12,4 +12,8 @@ public class UserUtils {
     return member.getRoles().stream()
         .anyMatch(role -> role.getName().equals("Ticket Support Admin"));
   }
+
+  public static boolean hasRole(Member member, String role) {
+    return member.getRoles().stream().anyMatch(serverRole -> serverRole.getName().equals(role));
+  }
 }

@@ -1,18 +1,14 @@
 package jda.layer.bot.JDA.Handlers.slash;
 
 import java.util.concurrent.TimeUnit;
-import jda.layer.bot.Repository.UserRepository;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BanCommand implements SlashCommandInteraction {
-
-  @Autowired private UserRepository userRepository;
 
   @Override
   public void handle(@NotNull SlashCommandInteractionEvent event) {

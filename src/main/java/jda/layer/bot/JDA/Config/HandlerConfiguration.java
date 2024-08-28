@@ -1,4 +1,4 @@
-package jda.layer.bot.JDA.Handlers;
+package jda.layer.bot.JDA.Config;
 
 import java.util.Map;
 import jda.layer.bot.JDA.Handlers.buttons.ButtonInteraction;

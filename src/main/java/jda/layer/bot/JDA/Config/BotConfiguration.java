@@ -1,8 +1,7 @@
-package jda.layer.bot.Configuration;
+package jda.layer.bot.JDA.Config;
 
 import java.util.EnumSet;
 import jda.layer.bot.JDA.Bot;
-import jda.layer.bot.JDA.Handlers.HandlerInitializer;
 import jda.layer.bot.Repository.GuildRepository;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -22,12 +21,16 @@ public class BotConfiguration {
   @Value("${bot.token}")
   private String token;
 
-  private final GuildRepository guildRepository;
-  private final HandlerInitializer handlerInitializer;
+  private JDA jda;
 
-  public BotConfiguration(GuildRepository guildRepository, HandlerInitializer handlerInitializer) {
+  private final HandlerConfiguration handlerConfiguration;
+
+  private final GuildRepository guildRepository;
+
+  public BotConfiguration(
+      HandlerConfiguration handlerConfiguration, GuildRepository guildRepository) {
+    this.handlerConfiguration = handlerConfiguration;
     this.guildRepository = guildRepository;
-    this.handlerInitializer = handlerInitializer;
   }
 
   @Bean
@@ -41,14 +44,28 @@ public class BotConfiguration {
               .setChunkingFilter(ChunkingFilter.ALL)
               .enableIntents(EnumSet.of(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS))
               .enableCache(EnumSet.of(CacheFlag.MEMBER_OVERRIDES))
-              .build();
-
-      Bot bot = new Bot(guildRepository, handlerInitializer);
-      jda.addEventListener(bot);
-
+              .build()
+              .awaitReady();
+      this.jda = jda;
       return jda;
     } catch (Exception e) {
       throw new IllegalArgumentException("Provide a valid bot token!", e);
+    }
+  }
+
+  @Bean
+  public JDA addBotEventListener() {
+    if (jda != null) {
+      Bot bot =
+          new Bot(
+              guildRepository,
+              handlerConfiguration.buttonHandlersMap(),
+              handlerConfiguration.slashCommandHandlersMap(),
+              handlerConfiguration.modalHandlersMap());
+      jda.addEventListener(bot);
+      return jda;
+    } else {
+      throw new IllegalStateException("JDA instance is not initialized.");
     }
   }
 }

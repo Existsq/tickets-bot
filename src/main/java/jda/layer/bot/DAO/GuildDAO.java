@@ -1,21 +1,33 @@
 package jda.layer.bot.DAO;
 
-import lombok.Builder;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
-@Builder
-@Getter
-@Setter
 public class GuildDAO {
 
-  long guildId;
+  @Setter @Getter private long guildId;
+  @Setter @Getter private long ownerId;
+  @Setter @Getter private boolean hasPremium;
+  @Setter @Getter private LocalDateTime joinDate;
+  private boolean isBanned;
 
-  long ownerId;
+  public GuildDAO() {}
 
-  boolean has_premium;
+  public GuildDAO(
+      long guildId, long ownerId, boolean hasPremium, LocalDateTime joinDate, boolean isBanned) {
+    this.guildId = guildId;
+    this.ownerId = ownerId;
+    this.hasPremium = hasPremium;
+    this.joinDate = joinDate;
+    this.isBanned = isBanned;
+  }
 
-  String join_date;
+  public boolean isBanned() {
+    return isBanned;
+  }
 
-  boolean isBanned;
+  public void setBanned(boolean banned) {
+    isBanned = banned;
+  }
 }
